@@ -145,7 +145,7 @@
     <div class="marca">
       <div class="logo" aria-hidden="true">A</div>
       <div>
-        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.2.0</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.3.0</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -240,15 +240,27 @@
       <button class="btn-secundario" id="btnExportar" type="button">Exportar copia (JSON)</button>
       <label class="btn-secundario" for="inputImportar" style="display:inline-flex;align-items:center;cursor:pointer">Importar copia</label>
       <input type="file" id="inputImportar" accept="application/json" hidden>
+      <button class="btn-secundario" id="btnDescargarApp" type="button">Descargar app offline (.html)</button>
       <button class="btn-borrar" id="btnBorrarTodo" type="button">Borrar todos mis datos</button>
     </div>
     <p class="muted" id="infoRespaldo" style="margin-top:.5rem"></p>
+    <div class="legal-grid" style="grid-template-columns:1fr 1fr">
+      <article><h3>Acceso directo sin internet</h3>
+        <details><summary>Android (Chrome)</summary><p class="muted">Abre la página, toca ⋮ > Añadir a pantalla de inicio > Añadir. Se abre a pantalla completa.</p></details>
+        <details><summary>iPhone (Safari)</summary><p class="muted">Abre la página, toca Compartir > Añadir a inicio > Añadir.</p></details>
+      </article>
+      <article><h3>En computador</h3>
+        <details><summary>Windows (Chrome/Edge)</summary><p class="muted">Abre el .html descargado, ⋮ > Guardar y compartir > Crear acceso directo > marca “Abrir como ventana”.</p></details>
+        <details><summary>Linux</summary><p class="muted">Guarda el .html en Descargas y crea <code>~/.local/share/applications/agenda.desktop</code> con: <code>Exec=xdg-open ~/Descargas/agenda-escolar.html</code>.</p></details>
+      </article>
+    </div>
+    <p class="muted">La copia .html no incluye tus tareas: muévelas con Exportar/Importar JSON.</p>
   </section>
 </main>
 
 <footer>
   <div class="foot-inner">
-    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.2.0</span> · Uso educativo · jhormaza.dev@gmail.com</span>
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.3.0</span> · Uso educativo · jhormaza.dev@gmail.com</span>
     <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a> · <a href="#contenido">Volver arriba</a></span>
   </div>
 </footer>
@@ -258,7 +270,7 @@
 // Claves de almacenamiento y versión
 const CLAVE_HORARIO = "colegio_horario";
 const CLAVE_TAREAS = "colegio_tareas";
-const VERSION = "v1.2.0";
+const VERSION = "v1.3.0";
 // Estado en memoria
 let listaClases = [];
 let listaTareas = [];
@@ -527,6 +539,18 @@ function importarDatos(archivo) {
   };
   lector.readAsText(archivo);
 }
+// Descarga copia .html limpia para uso sin internet
+function descargarApp() {
+  const copia = document.documentElement.cloneNode(true);
+  copia.querySelector("#tablaHorario").textContent = "";
+  copia.querySelector("#listaTareas").textContent = "";
+  const url = URL.createObjectURL(new Blob(["<!DOCTYPE html>\n" + copia.outerHTML], { type: "text/html" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = "agenda-escolar.html";
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  document.getElementById("infoRespaldo").textContent = "App descargada. Ábrela con doble clic, sin internet.";
+}
 // Borra todo con confirmación
 function borrarTodo() {
   if (!confirm("¿Borrar horario y tareas de este navegador?")) return;
@@ -564,6 +588,7 @@ function iniciarApp() {
     if (b.dataset.accion === "entregar-tarea") marcarEntregada(b.dataset.id);
   });
   document.getElementById("btnExportar").addEventListener("click", exportarDatos);
+  document.getElementById("btnDescargarApp").addEventListener("click", descargarApp);
   document.getElementById("inputImportar").addEventListener("change", e => { importarDatos(e.target.files[0]); e.target.value = ""; });
   document.getElementById("btnBorrarTodo").addEventListener("click", borrarTodo);
   cargarDatos();
