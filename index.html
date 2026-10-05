@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Mi Colegio: horario semanal y tareas 100% local. Sin cuentas, sin internet. Tus datos quedan en tu navegador.">
+<meta name="description" content="Agenda Escolar: horario semanal y tareas 100% local. Sin cuentas, sin internet. Tus datos quedan en tu navegador.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f6fb">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121212">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b82f6'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='system-ui' font-weight='bold'%3EM%3C/text%3E%3C/svg%3E">
-<title>Mi Colegio — Horario y Tareas</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b82f6'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='system-ui' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E">
+<title>Agenda Escolar — Horario y Tareas</title>
 <style>
   :root {
     color-scheme: light dark;
@@ -143,9 +143,9 @@
 <header class="top">
   <div class="top-inner">
     <div class="marca">
-      <div class="logo" aria-hidden="true">M</div>
+      <div class="logo" aria-hidden="true">A</div>
       <div>
-        <h1>Mi Colegio <span class="version" id="versionBadge">v1.2.0</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.2.0</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -248,7 +248,7 @@
 
 <footer>
   <div class="foot-inner">
-    <span>© <span id="anio">2026</span> Mi Colegio · <span id="versionFoot">v1.2.0</span> · Uso educativo · jhormaza.dev@gmail.com</span>
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.2.0</span> · Uso educativo · jhormaza.dev@gmail.com</span>
     <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a> · <a href="#contenido">Volver arriba</a></span>
   </div>
 </footer>
@@ -503,10 +503,10 @@ function actualizarFiltro() {
 }
 // Descarga respaldo JSON local
 function exportarDatos() {
-  const respaldo = { app: "mi-colegio", version: VERSION, exportado: new Date().toISOString(), horario: listaClases, tareas: listaTareas };
+  const respaldo = { app: "agenda-escolar", version: VERSION, exportado: new Date().toISOString(), horario: listaClases, tareas: listaTareas };
   const url = URL.createObjectURL(new Blob([JSON.stringify(respaldo, null, 2)], { type: "application/json" }));
   const a = document.createElement("a");
-  a.href = url; a.download = "mi-colegio-respaldo.json";
+  a.href = url; a.download = "agenda-escolar-respaldo.json";
   document.body.appendChild(a); a.click(); a.remove();
   URL.revokeObjectURL(url);
   document.getElementById("infoRespaldo").textContent = "Copia exportada. Guárdala en un lugar seguro.";
