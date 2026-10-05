@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Mi Colegio: horario semanal y tareas 100% local. Sin cuentas, sin internet. Tus datos quedan en tu navegador.">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f6fb">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121212">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b82f6'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='system-ui' font-weight='bold'%3EM%3C/text%3E%3C/svg%3E">
+<title>Mi Colegio — Horario y Tareas</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --fondo: #f4f6fb;
+    --tarjeta: #ffffff;
+    --borde: #e5e7eb;
+    --texto: #1f2937;
+    --muted: #6b7280;
+    --input-fondo: #ffffff;
+    --input-borde: #d1d5db;
+    --th-fondo: #eff6ff;
+    --clase-fondo: #dbeafe;
+    --clase-texto: #1e40af;
+    --ok-fondo: #dcfce7; --ok-texto: #15803d; --ok-borde: #86efac;
+    --err-fondo: #fee2e2; --err-texto: #b91c1c; --err-borde: #fca5a5;
+    --warn-fondo: #fef9c3; --warn-texto: #854d0e; --warn-borde: #fde047;
+    --principal: #3b82f6; --principal-hover: #2563eb;
+    --radio: 12px;
+    --sombra: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+    --max: 1040px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fondo: #121212;
+      --tarjeta: #1e1e1e;
+      --borde: #2c2c2c;
+      --texto: #ededed;
+      --muted: #a3a3a3;
+      --input-fondo: #121212;
+      --input-borde: #3d3d3d;
+      --th-fondo: #121212;
+      --clase-fondo: #1e40af;
+      --clase-texto: #dbeafe;
+      --ok-fondo: #052e16; --ok-texto: #86efac; --ok-borde: #15803d;
+      --err-fondo: #450a0a; --err-texto: #fca5a5; --err-borde: #b91c1c;
+      --warn-fondo: #422006; --warn-texto: #fde68a; --warn-borde: #a16207;
+      --principal: #60a5fa; --principal-hover: #3b82f6;
+      --sombra: 0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif; background: var(--fondo); color: var(--texto); line-height: 1.5; }
+  .skip-link { position: absolute; left: -999px; top: 0; background: var(--principal); color: #fff; padding: .6rem 1rem; border-radius: 0 0 8px 0; z-index: 50; }
+  .skip-link:focus { left: 0; }
+  :focus-visible { outline: 2px solid var(--principal); outline-offset: 2px; }
+  header.top { background: var(--tarjeta); border-bottom: 1px solid var(--borde); position: sticky; top: 0; z-index: 10; }
+  .top-inner { max-width: var(--max); margin: 0 auto; padding: .8rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .marca { display: flex; align-items: center; gap: .6rem; }
+  .logo { width: 36px; height: 36px; border-radius: 9px; background: var(--principal); color: #fff; display: grid; place-items: center; font-weight: 800; }
+  .marca h1 { font-size: 1.1rem; line-height: 1.2; }
+  .marca small { color: var(--muted); font-weight: 400; }
+  .version { font-size: .72rem; background: var(--th-fondo); border: 1px solid var(--borde); padding: .1rem .5rem; border-radius: 20px; color: var(--muted); }
+  nav { display: flex; gap: .4rem; flex-wrap: wrap; }
+  nav a { color: var(--muted); text-decoration: none; font-size: .9rem; padding: .45rem .7rem; border-radius: 8px; min-height: 44px; display: inline-flex; align-items: center; }
+  nav a:hover { background: var(--th-fondo); color: var(--texto); }
+  main { max-width: var(--max); margin: 0 auto; padding: 1rem; display: grid; gap: 1rem; }
+  section, .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); box-shadow: var(--sombra); }
+  section { padding: 1rem; }
+  .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin-bottom: .7rem; }
+  .sec-head h2 { font-size: 1.05rem; }
+  .sec-head p, .muted { color: var(--muted); font-size: .88rem; }
+  .panel-resumen { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: none; border: none; box-shadow: none; padding: 0; }
+  .tarjeta { padding: 1rem; display: flex; gap: .8rem; align-items: center; }
+  .tarjeta .icono { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+  .azul .icono { background: var(--clase-fondo); color: var(--clase-texto); }
+  .verde .icono { background: var(--ok-fondo); color: var(--ok-texto); }
+  .tarjeta h2 { font-size: 1.9rem; line-height: 1; }
+  .tarjeta span { color: var(--muted); font-size: .85rem; }
+  .tarjeta.azul { border-left: 6px solid var(--principal); }
+  .tarjeta.verde { border-left: 6px solid #22c55e; }
+  form { display: grid; gap: .6rem; }
+  .fila { display: grid; gap: .6rem; grid-template-columns: 1fr 1fr; }
+  label { font-size: .82rem; font-weight: 600; }
+  input, select, textarea { width: 100%; padding: .6rem; border: 1px solid var(--input-borde); background: var(--input-fondo); color: var(--texto); border-radius: 8px; font-size: 1rem; }
+  .error { display: none; background: var(--err-fondo); color: var(--err-texto); border: 1px solid var(--err-borde); padding: .5rem .7rem; border-radius: 8px; font-size: .88rem; }
+  .error.visible { display: block; }
+  button { padding: .6rem 1rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; min-height: 44px; }
+  .btn-principal { background: var(--principal); color: #fff; }
+  .btn-principal:hover { background: var(--principal-hover); }
+  .btn-secundario { background: var(--th-fondo); color: var(--texto); border: 1px solid var(--borde); }
+  .btn-pequeno { padding: .3rem .6rem; font-size: .85rem; margin-right: .3rem; min-height: 36px; }
+  .btn-entregar { background: var(--ok-fondo); color: var(--ok-texto); border: 1px solid var(--ok-borde); }
+  .btn-borrar { background: var(--err-fondo); color: var(--err-texto); border: 1px solid var(--err-borde); }
+  .btn-editar { background: var(--warn-fondo); color: var(--warn-texto); border: 1px solid var(--warn-borde); }
+  .tabla-contenedor { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 600px; }
+  th, td { border: 1px solid var(--borde); padding: .5rem; text-align: center; font-size: .9rem; }
+  th { background: var(--th-fondo); color: var(--texto); }
+  .clase { background: var(--clase-fondo); color: var(--clase-texto); border-radius: 6px; padding: .35rem; }
+  .etiqueta-dia { display: none; }
+  .filtros { display: flex; gap: .6rem; margin-bottom: .8rem; flex-wrap: wrap; align-items: center; }
+  .lista-tareas { display: grid; gap: .7rem; }
+  .tarea { border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 10px; padding: .8rem; display: grid; gap: .4rem; }
+  .tarea-cabeza { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .4rem; }
+  .estado { font-size: .75rem; font-weight: 700; padding: .2rem .6rem; border-radius: 20px; }
+  .pendiente { background: var(--warn-fondo); color: var(--warn-texto); }
+  .entregada { background: var(--ok-fondo); color: var(--ok-texto); }
+  .vencida { background: var(--err-fondo); color: var(--err-texto); }
+  .vacio { color: var(--muted); text-align: center; padding: 1rem; }
+  .legal-grid { display: grid; gap: .8rem; grid-template-columns: repeat(3, 1fr); margin: .8rem 0; }
+  .legal-grid article { border: 1px solid var(--borde); border-radius: 10px; padding: .8rem; background: var(--input-fondo); }
+  .legal-grid h3 { font-size: .92rem; margin-bottom: .3rem; }
+  .legal-grid p, .legal-grid li { font-size: .85rem; color: var(--muted); }
+  .legal-grid ul { padding-left: 1.1rem; }
+  .datos-acciones { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
+  footer { border-top: 1px solid var(--borde); background: var(--tarjeta); }
+  .foot-inner { max-width: var(--max); margin: 0 auto; padding: 1rem; display: flex; justify-content: space-between; gap: .6rem; flex-wrap: wrap; color: var(--muted); font-size: .85rem; }
+  footer a { color: var(--muted); }
+  @media (max-width: 700px) { .legal-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) {
+    main { padding: .8rem; }
+    section { padding: .8rem; }
+    .panel-resumen { grid-template-columns: 1fr; }
+    .tarjeta h2 { font-size: 1.5rem; }
+    .fila { grid-template-columns: 1fr; }
+    .tabla-contenedor { overflow: visible; }
+    table { min-width: 0; border: none; }
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tbody tr { border: 1px solid var(--borde); border-radius: 10px; margin-bottom: .6rem; padding: .5rem; background: var(--tarjeta); }
+    tbody td { border: none; text-align: left; padding: .3rem; }
+    tbody td:first-child { border-bottom: 1px solid var(--borde); margin-bottom: .3rem; font-size: 1rem; }
+    .etiqueta-dia { display: block; font-size: .75rem; font-weight: 700; color: var(--muted); }
+    td.vacia { display: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="marca">
+      <div class="logo" aria-hidden="true">M</div>
+      <div>
+        <h1>Mi Colegio <span class="version" id="versionBadge">v1.2.0</span></h1>
+        <small>Horario y tareas · 100% local, sin cuentas</small>
+      </div>
+    </div>
+    <nav aria-label="Navegación principal">
+      <a href="#resumen">Resumen</a>
+      <a href="#horario">Horario</a>
+      <a href="#tareas">Tareas</a>
+      <a href="#legal">Legal</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+  <section id="resumen" aria-labelledby="tituloResumen">
+    <div class="sec-head">
+      <h2 id="tituloResumen">Resumen de hoy</h2>
+      <p id="fechaHoy" class="muted"></p>
+    </div>
+    <div class="panel-resumen" aria-live="polite">
+      <div class="tarjeta azul">
+        <div class="icono" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div><h2 id="textoClasesHoy">0</h2><span id="textoDiaHoy">Hoy tienes 0 clases</span></div>
+      </div>
+      <div class="tarjeta verde">
+        <div class="icono" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div><h2 id="textoTareasPendientes">0</h2><span id="textoTareasDetalle">Tienes 0 tareas pendientes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="horario" aria-labelledby="tituloHorario">
+    <div class="sec-head">
+      <div><h2 id="tituloHorario">Horario semanal</h2><p>Lunes a viernes · se guarda en este navegador</p></div>
+      <p class="muted" id="conteoClases"></p>
+    </div>
+    <form id="formHorario" novalidate>
+      <div class="fila">
+        <div><label for="horarioDia">Día</label><select id="horarioDia"><option>Lunes</option><option>Martes</option><option>Miércoles</option><option>Jueves</option><option>Viernes</option></select></div>
+        <div><label for="horarioMateria">Materia</label><input id="horarioMateria" maxlength="60" placeholder="Ej: Matemáticas" required autocomplete="off"></div>
+      </div>
+      <div class="fila">
+        <div><label for="horarioInicio">Hora inicio</label><input id="horarioInicio" type="time" value="07:00" required></div>
+        <div><label for="horarioFin">Hora fin</label><input id="horarioFin" type="time" value="08:00" required></div>
+      </div>
+      <p class="error" id="errorHorario" role="alert"></p>
+      <button class="btn-principal" type="submit" id="btnGuardarHorario">Agregar clase</button>
+    </form>
+    <br>
+    <div class="tabla-contenedor">
+      <table>
+        <caption class="muted" style="caption-side:bottom;padding:.4rem">La hora de fin debe ser mayor que la de inicio. No se permiten dos clases en el mismo día y horario.</caption>
+        <thead><tr><th scope="col">Hora</th><th scope="col">Lunes</th><th scope="col">Martes</th><th scope="col">Miércoles</th><th scope="col">Jueves</th><th scope="col">Viernes</th></tr></thead>
+        <tbody id="tablaHorario"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="tareas" aria-labelledby="tituloTareas">
+    <div class="sec-head">
+      <div><h2 id="tituloTareas">Tareas</h2><p>El estado se calcula solo con la fecha de entrega</p></div>
+      <p class="muted" id="conteoTareas"></p>
+    </div>
+    <form id="formTarea" novalidate>
+      <div class="fila">
+        <div><label for="tareaMateria">Materia</label><input id="tareaMateria" maxlength="60" placeholder="Ej: Ciencias" required autocomplete="off"></div>
+        <div><label for="tareaFecha">Fecha de entrega</label><input id="tareaFecha" type="date" required></div>
+      </div>
+      <div><label for="tareaTitulo">Título</label><input id="tareaTitulo" maxlength="80" placeholder="Ej: Taller página 45" required autocomplete="off"></div>
+      <div><label for="tareaDescripcion">Descripción</label><textarea id="tareaDescripcion" rows="2" maxlength="500" placeholder="Detalles de la tarea..."></textarea></div>
+      <p class="error" id="errorTarea" role="alert"></p>
+      <button class="btn-principal" type="submit">Agregar tarea</button>
+    </form>
+    <br>
+    <div class="filtros">
+      <label for="filtroMateria">Filtrar por materia</label>
+      <select id="filtroMateria"><option value="todas">Todas las materias</option></select>
+    </div>
+    <div class="lista-tareas" id="listaTareas" aria-live="polite"></div>
+  </section>
+
+  <section id="legal" aria-labelledby="tituloLegal">
+    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-05 · Versión v1.2.0 · Uso educativo. <strong>Cambia los corchetes antes de publicar.</strong></p></div></div>
+    <div class="legal-grid">
+      <article><h3>1. Responsable y contacto</h3><p>Responsable: [Proyecto educativo Mi Colegio]. Contacto: [contacto@ejemplo.edu]. Jurisdicción: Colombia (Ley 1581 de 2012). Esta app es una página estática publicada en GitHub Pages: no opera cuentas ni servidores propios.</p></article>
+      <article><h3>2. Menores de edad</h3><p>Uso con acompañamiento de acudiente o docente. No hay registro, login ni recolección en servidor. No se pide nombre, documento ni ubicación. Si eres acudiente y tienes dudas, escribe a [contacto@ejemplo.edu].</p></article>
+      <article><h3>3. Privacidad y datos locales</h3><ul><li>Todo queda en <code>localStorage</code> de tu navegador (<code>colegio_horario</code>, <code>colegio_tareas</code>).</li><li>Sin cookies de rastreo, sin analítica, sin envíos a internet.</li><li>Datos por dispositivo y navegador: no se sincronizan solos; usa Exportar/Importar.</li><li>Modo privado o “borrar datos” del navegador elimina la app. GitHub aloja la página por HTTPS pero no recibe tus tareas.</li></ul></article>
+      <article><h3>4. Términos de uso</h3><ul><li>Uso personal y educativo; verifica entregas con tu colegio.</li><li>Eres responsable de tu respaldo (Exportar JSON) y de tu dispositivo.</li><li>Sin garantías de disponibilidad; el servicio puede cambiar sin aviso.</li><li>Uso aceptable: no intentes romper la página ni subir contenido ilícito vía Importar.</li></ul></article>
+      <article><h3>5. Seguridad</h3><ul><li>Un solo archivo, sin dependencias ni CDNs; sin conexiones externas (<code>connect-src 'none'</code>).</li><li>Entradas saneadas antes de mostrarse (anti-XSS) y sin <code>onclick</code> inline.</li><li>Si encuentras un fallo, repórtalo a [contacto@ejemplo.edu] antes de difundirlo.</li></ul></article>
+      <article><h3>6. Tus derechos</h3><p>Como nada viaja a un servidor, ejerces tus derechos localmente: consulta con Exportar, rectifica editando, suprime con “Borrar todos mis datos” o limpiando el navegador. Reclamos Ley 1581: [contacto@ejemplo.edu]. Cambios de esta política se publican aquí con nueva fecha y versión.</p></article>
+    </div>
+    <div class="datos-acciones">
+      <button class="btn-secundario" id="btnExportar" type="button">Exportar copia (JSON)</button>
+      <label class="btn-secundario" for="inputImportar" style="display:inline-flex;align-items:center;cursor:pointer">Importar copia</label>
+      <input type="file" id="inputImportar" accept="application/json" hidden>
+      <button class="btn-borrar" id="btnBorrarTodo" type="button">Borrar todos mis datos</button>
+    </div>
+    <p class="muted" id="infoRespaldo" style="margin-top:.5rem"></p>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <span>© <span id="anio">2026</span> Mi Colegio · <span id="versionFoot">v1.2.0</span> · Uso educativo · [contacto@ejemplo.edu]</span>
+    <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a> · <a href="#contenido">Volver arriba</a></span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+// Claves de almacenamiento y versión
+const CLAVE_HORARIO = "colegio_horario";
+const CLAVE_TAREAS = "colegio_tareas";
+const VERSION = "v1.2.0";
+// Estado en memoria
+let listaClases = [];
+let listaTareas = [];
+let idEditando = null;
+const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+// Sanea texto de usuario para evitar XSS
+function escaparTexto(texto) {
+  return String(texto ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+}
+// Persiste horario y tareas en localStorage
+function guardarDatos() {
+  localStorage.setItem(CLAVE_HORARIO, JSON.stringify(listaClases));
+  localStorage.setItem(CLAVE_TAREAS, JSON.stringify(listaTareas));
+}
+// Carga datos con tolerancia a JSON corrupto
+function cargarDatos() {
+  try {
+    listaClases = JSON.parse(localStorage.getItem(CLAVE_HORARIO)) || [];
+    listaTareas = JSON.parse(localStorage.getItem(CLAVE_TAREAS)) || [];
+  } catch { listaClases = []; listaTareas = []; }
+  if (!Array.isArray(listaClases)) listaClases = [];
+  if (!Array.isArray(listaTareas)) listaTareas = [];
+}
+// Genera id único
+function crearId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+// Determina Pendiente / Entregada / Vencida
+function calcularEstado(tarea) {
+  if (tarea.entregada) return "Entregada";
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const entrega = new Date(tarea.fechaEntrega + "T00:00:00");
+  if (entrega < hoy) return "Vencida";
+  return "Pendiente";
+}
+// Nombre del día actual en español
+function obtenerDiaHoy() {
+  const nombres = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  return nombres[new Date().getDay()];
+}
+// Muestra error de formulario
+function mostrarError(id, mensaje) {
+  const el = document.getElementById(id);
+  el.textContent = mensaje;
+  el.classList.toggle("visible", Boolean(mensaje));
+}
+// Actualiza dashboard y fecha visible
+function mostrarResumen() {
+  const diaHoy = obtenerDiaHoy();
+  const clasesHoy = listaClases.filter(c => c.dia === diaHoy).length;
+  const pendientes = listaTareas.filter(t => !t.entregada).length;
+  document.getElementById("textoClasesHoy").textContent = clasesHoy;
+  document.getElementById("textoDiaHoy").textContent = `Hoy (${diaHoy}) tienes ${clasesHoy} clases`;
+  document.getElementById("textoTareasPendientes").textContent = pendientes;
+  document.getElementById("textoTareasDetalle").textContent = `Tienes ${pendientes} tareas pendientes`;
+  document.getElementById("fechaHoy").textContent = new Date().toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long" });
+  document.getElementById("conteoClases").textContent = `${listaClases.length} clases en total`;
+  document.getElementById("conteoTareas").textContent = `${listaTareas.length} tareas en total`;
+}
+// Valida que el bloque de horario no choque ni sea inválido
+function validarClase(dia, inicio, fin, ignorarId) {
+  if (!dia || !inicio || !fin) return "Completa día, inicio y fin.";
+  if (fin <= inicio) return "La hora de fin debe ser mayor que la de inicio.";
+  const choque = listaClases.some(c => c.dia === dia && c.inicio === inicio && c.fin === fin && c.id !== ignorarId);
+  if (choque) return "Ya existe una clase en ese día y horario.";
+  return "";
+}
+// Guarda alta o edición de clase
+function guardarClase(evento) {
+  evento.preventDefault();
+  const dia = document.getElementById("horarioDia").value;
+  const materia = document.getElementById("horarioMateria").value.trim();
+  const inicio = document.getElementById("horarioInicio").value;
+  const fin = document.getElementById("horarioFin").value;
+  if (!materia) { mostrarError("errorHorario", "Escribe la materia."); return; }
+  const error = validarClase(dia, inicio, fin, idEditando);
+  if (error) { mostrarError("errorHorario", error); return; }
+  mostrarError("errorHorario", "");
+  if (idEditando === null) listaClases.push({ id: crearId(), dia, materia, inicio, fin });
+  else {
+    const clase = listaClases.find(c => c.id === idEditando);
+    if (clase) Object.assign(clase, { dia, materia, inicio, fin });
+    idEditando = null;
+    document.getElementById("btnGuardarHorario").textContent = "Agregar clase";
+  }
+  document.getElementById("formHorario").reset();
+  guardarDatos();
+  mostrarTodo();
+}
+// Crea botón pequeño con data-attributes (delegación)
+function crearBoton(texto, claseCss, accion, id) {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "btn-pequeno " + claseCss;
+  b.textContent = texto;
+  b.dataset.accion = accion;
+  b.dataset.id = id;
+  return b;
+}
+// Dibuja tabla semanal con DOM seguro (sin innerHTML de usuario)
+function mostrarHorario() {
+  const cuerpo = document.getElementById("tablaHorario");
+  cuerpo.textContent = "";
+  const ordenadas = [...listaClases].sort((a, b) => a.inicio.localeCompare(b.inicio));
+  const horas = [...new Set(ordenadas.map(c => c.inicio + " - " + c.fin))];
+  if (!horas.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 6; td.className = "vacio";
+    td.textContent = "Sin clases. Agrega tu primera materia.";
+    tr.appendChild(td); cuerpo.appendChild(tr);
+    return;
+  }
+  horas.forEach(hora => {
+    const fila = document.createElement("tr");
+    const celdaHora = document.createElement("td");
+    const fuerte = document.createElement("b");
+    fuerte.textContent = hora;
+    celdaHora.appendChild(fuerte);
+    fila.appendChild(celdaHora);
+    diasSemana.forEach(dia => {
+      const celda = document.createElement("td");
+      const clase = ordenadas.find(c => c.dia === dia && (c.inicio + " - " + c.fin) === hora);
+      if (!clase) { celda.textContent = "-"; celda.className = "vacia"; }
+      else {
+        const caja = document.createElement("div");
+        caja.className = "clase";
+        const etiqueta = document.createElement("span");
+        etiqueta.className = "etiqueta-dia";
+        etiqueta.textContent = dia + " " + hora;
+        const nombre = document.createElement("b");
+        nombre.textContent = clase.materia;
+        caja.append(etiqueta, nombre, document.createElement("br"));
+        caja.append(crearBoton("Editar", "btn-editar", "editar-clase", clase.id));
+        caja.append(crearBoton("X", "btn-borrar", "borrar-clase", clase.id));
+        celda.appendChild(caja);
+      }
+      fila.appendChild(celda);
+    });
+    cuerpo.appendChild(fila);
+  });
+}
+// Elimina clase por id
+function borrarClase(id) {
+  listaClases = listaClases.filter(c => c.id !== id);
+  guardarDatos();
+  mostrarTodo();
+}
+// Carga clase al formulario para editar
+function editarClase(id) {
+  const clase = listaClases.find(c => c.id === id);
+  if (!clase) return;
+  document.getElementById("horarioDia").value = clase.dia;
+  document.getElementById("horarioMateria").value = clase.materia;
+  document.getElementById("horarioInicio").value = clase.inicio;
+  document.getElementById("horarioFin").value = clase.fin;
+  idEditando = id;
+  document.getElementById("btnGuardarHorario").textContent = "Guardar cambios";
+  document.getElementById("horario").scrollIntoView({ behavior: "smooth" });
+}
+// Guarda nueva tarea validada
+function guardarTarea(evento) {
+  evento.preventDefault();
+  const materia = document.getElementById("tareaMateria").value.trim();
+  const titulo = document.getElementById("tareaTitulo").value.trim();
+  const descripcion = document.getElementById("tareaDescripcion").value.trim();
+  const fechaEntrega = document.getElementById("tareaFecha").value;
+  if (!materia || !titulo || !fechaEntrega) { mostrarError("errorTarea", "Materia, título y fecha son obligatorios."); return; }
+  mostrarError("errorTarea", "");
+  listaTareas.push({ id: crearId(), materia, titulo, descripcion, fechaEntrega, entregada: false });
+  document.getElementById("formTarea").reset();
+  guardarDatos();
+  mostrarTodo();
+}
+// Dibuja tarjetas de tareas con texto saneado
+function mostrarTareas() {
+  const cont = document.getElementById("listaTareas");
+  const filtro = document.getElementById("filtroMateria").value;
+  cont.textContent = "";
+  let visibles = [...listaTareas].sort((a, b) => a.fechaEntrega.localeCompare(b.fechaEntrega));
+  if (filtro !== "todas") visibles = visibles.filter(t => t.materia === filtro);
+  if (!visibles.length) {
+    const d = document.createElement("div");
+    d.className = "vacio"; d.textContent = "Sin tareas. Agrega la primera.";
+    cont.appendChild(d); return;
+  }
+  visibles.forEach(tarea => {
+    const estado = calcularEstado(tarea);
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "tarea";
+    const cabeza = document.createElement("div");
+    cabeza.className = "tarea-cabeza";
+    const titulo = document.createElement("b");
+    titulo.textContent = tarea.materia + " — " + tarea.titulo;
+    const insignia = document.createElement("span");
+    insignia.className = "estado " + estado.toLowerCase();
+    insignia.textContent = estado;
+    cabeza.append(titulo, insignia);
+    const desc = document.createElement("div");
+    desc.textContent = tarea.descripcion || "Sin descripción";
+    const fecha = document.createElement("small");
+    fecha.className = "muted";
+    fecha.textContent = "Entrega: " + tarea.fechaEntrega;
+    const acciones = document.createElement("div");
+    if (!tarea.entregada) acciones.append(crearBoton("Marcar entregada", "btn-entregar", "entregar-tarea", tarea.id));
+    acciones.append(crearBoton("Eliminar", "btn-borrar", "borrar-tarea", tarea.id));
+    tarjeta.append(cabeza, desc, fecha, acciones);
+    cont.appendChild(tarjeta);
+  });
+  void escaparTexto;
+}
+// Marca tarea como entregada
+function marcarEntregada(id) {
+  const tarea = listaTareas.find(t => t.id === id);
+  if (tarea) tarea.entregada = true;
+  guardarDatos();
+  mostrarTodo();
+}
+// Elimina tarea por id
+function borrarTarea(id) {
+  listaTareas = listaTareas.filter(t => t.id !== id);
+  guardarDatos();
+  mostrarTodo();
+}
+// Reconstruye filtro de materias preservando selección
+function actualizarFiltro() {
+  const select = document.getElementById("filtroMateria");
+  const actual = select.value;
+  const materias = [...new Set(listaTareas.map(t => t.materia))].sort();
+  select.textContent = "";
+  const base = document.createElement("option");
+  base.value = "todas"; base.textContent = "Todas las materias";
+  select.appendChild(base);
+  materias.forEach(m => {
+    const o = document.createElement("option");
+    o.value = m; o.textContent = m;
+    select.appendChild(o);
+  });
+  if ([...select.options].some(o => o.value === actual)) select.value = actual;
+}
+// Descarga respaldo JSON local
+function exportarDatos() {
+  const respaldo = { app: "mi-colegio", version: VERSION, exportado: new Date().toISOString(), horario: listaClases, tareas: listaTareas };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(respaldo, null, 2)], { type: "application/json" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = "mi-colegio-respaldo.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  document.getElementById("infoRespaldo").textContent = "Copia exportada. Guárdala en un lugar seguro.";
+}
+// Restaura respaldo validando estructura mínima
+function importarDatos(archivo) {
+  if (!archivo) return;
+  const lector = new FileReader();
+  lector.onload = () => {
+    try {
+      const datos = JSON.parse(lector.result);
+      if (!Array.isArray(datos.horario) || !Array.isArray(datos.tareas)) throw new Error("formato");
+      listaClases = datos.horario.filter(c => c.id && c.dia && c.inicio && c.fin);
+      listaTareas = datos.tareas.filter(t => t.id && t.materia && t.fechaEntrega);
+      guardarDatos(); mostrarTodo();
+      document.getElementById("infoRespaldo").textContent = "Copia importada correctamente.";
+    } catch { document.getElementById("infoRespaldo").textContent = "Archivo inválido. No se importó nada."; }
+  };
+  lector.readAsText(archivo);
+}
+// Borra todo con confirmación
+function borrarTodo() {
+  if (!confirm("¿Borrar horario y tareas de este navegador?")) return;
+  listaClases = []; listaTareas = []; idEditando = null;
+  localStorage.removeItem(CLAVE_HORARIO);
+  localStorage.removeItem(CLAVE_TAREAS);
+  mostrarTodo();
+  document.getElementById("infoRespaldo").textContent = "Datos locales eliminados.";
+}
+// Redibuja resumen, horario y tareas
+function mostrarTodo() {
+  mostrarResumen();
+  mostrarHorario();
+  actualizarFiltro();
+  mostrarTareas();
+}
+// Cablea eventos con delegación (sin onclick inline)
+function iniciarApp() {
+  document.getElementById("versionBadge").textContent = VERSION;
+  document.getElementById("versionFoot").textContent = VERSION;
+  document.getElementById("anio").textContent = new Date().getFullYear();
+  document.getElementById("formHorario").addEventListener("submit", guardarClase);
+  document.getElementById("formTarea").addEventListener("submit", guardarTarea);
+  document.getElementById("filtroMateria").addEventListener("change", mostrarTareas);
+  document.getElementById("tablaHorario").addEventListener("click", e => {
+    const b = e.target.closest("button[data-accion]");
+    if (!b) return;
+    if (b.dataset.accion === "borrar-clase") borrarClase(b.dataset.id);
+    if (b.dataset.accion === "editar-clase") editarClase(b.dataset.id);
+  });
+  document.getElementById("listaTareas").addEventListener("click", e => {
+    const b = e.target.closest("button[data-accion]");
+    if (!b) return;
+    if (b.dataset.accion === "borrar-tarea") borrarTarea(b.dataset.id);
+    if (b.dataset.accion === "entregar-tarea") marcarEntregada(b.dataset.id);
+  });
+  document.getElementById("btnExportar").addEventListener("click", exportarDatos);
+  document.getElementById("inputImportar").addEventListener("change", e => { importarDatos(e.target.files[0]); e.target.value = ""; });
+  document.getElementById("btnBorrarTodo").addEventListener("click", borrarTodo);
+  cargarDatos();
+  mostrarTodo();
+}
+iniciarApp();
+</script>
+</body>
+</html>
