@@ -75,7 +75,7 @@
   .btn-principal:hover { background: #2b2826; border-color: #2b2826; color: #fafafa; }
   .btn-secundario { background: transparent; color: #eeeeee; border: 1px solid #3d3a39; border-radius: 3px; padding: 8px 14px; font-size: 14px; display: inline-flex; align-items: center; cursor: pointer; }
   .btn-secundario:hover { border-color: #fafafa; color: #fafafa; }
-  .btn-pequeno { padding: 4px 14px; font-size: 14px; border-radius: 3px; margin-right: 8px; margin-top: 8px; min-height: 36px; }
+  .btn-pequeno { padding: 4px 14px; font-size: 14px; border-radius: 3px; margin-right: 8px; margin-top: 8px; min-height: 44px; }
   .btn-entregar, .btn-borrar, .btn-editar { background: transparent; color: #eeeeee; border: 1px solid #3d3a39; border-radius: 3px; }
   .btn-entregar:hover, .btn-borrar:hover, .btn-editar:hover { border-color: #fafafa; color: #fafafa; }
   .tabla-contenedor { overflow-x: auto; }
@@ -85,20 +85,21 @@
   th { background: #1d1a18; color: #b8b3b0; font-family: var(--font-geist-mono); font-size: 12px; font-weight: 400; text-transform: uppercase; letter-spacing: -.02em; }
   tbody td { color: #eeeeee; }
   tbody td:first-child { color: #b8b3b0; white-space: nowrap; }
-  .clase { background: #1d1a18; color: #eeeeee; border: 1px solid #3d3a39; border-radius: 3px; padding: 8px; display: grid; gap: 4px; }
+  .clase { background: #1d1a18; color: #eeeeee; border: 1px solid #3d3a39; border-radius: 3px; padding: 8px; display: grid; gap: 4px; overflow-wrap: anywhere; }
   .clase b { font-weight: 400; }
   .etiqueta-dia { display: none; }
   .filtros { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
   .filtros label { margin-bottom: 0; }
   .filtros select { width: auto; min-width: 220px; }
   .lista-tareas { display: grid; gap: 24px; }
-  .tarea { border: 1px solid #3d3a39; background: #1d1a18; border-radius: 10px; padding: 24px; display: grid; gap: 8px; }
+  .tarea { border: 1px solid #3d3a39; background: #1d1a18; border-radius: 10px; padding: 24px; display: grid; gap: 8px; overflow-wrap: anywhere; }
   .tarea-cabeza { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
   .tarea-cabeza b { font-weight: 400; color: #eeeeee; }
   .tarea small.muted, .tarea .muted { color: #8a8380; }
   .estado { font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; padding: 4px 14px; border-radius: 3px; border: 1px solid #3d3a39; background: #1d1a18; line-height: 1.2; white-space: nowrap; }
   .estado::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; background: #b8b3b0; }
   .estado.pendiente, .pendiente { color: #b8b3b0; }
+  .estado.pendiente::before { background: #b8b3b0; }
   .estado.entregada, .entregada { color: #a0ca92; }
   .estado.entregada::before { background: #a0ca92; }
   .estado.vencida, .vencida { color: #ee6018; }
@@ -169,7 +170,7 @@
     <div class="marca">
       <a class="wordmark" href="#contenido"><span class="punto punto-vivo" aria-hidden="true"></span>Agenda·Escolar</a>
       <div>
-        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.5.0</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.6.0</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -279,7 +280,7 @@
 
   <section id="legal" aria-labelledby="tituloLegal">
     <p class="eyebrow">03 — Privacidad y datos</p>
-    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.5.0 · Uso educativo.</p></div></div>
+    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.6.0 · Uso educativo.</p></div></div>
     <div class="legal-grid">
       <article><h3>1. Responsable y contacto</h3><p>Responsable: el autor del proyecto. Contacto: jhormaza.dev@gmail.com. Jurisdicción: Colombia (Ley 1581 de 2012). Esta app es una página estática publicada en GitHub Pages: no opera cuentas ni servidores propios.</p></article>
       <article><h3>2. Menores de edad</h3><p>Uso con acompañamiento de acudiente o docente. No hay registro, login ni recolección en servidor. No se pide nombre, documento ni ubicación. Si eres acudiente y tienes dudas, escribe a jhormaza.dev@gmail.com.</p></article>
@@ -332,7 +333,7 @@
     </div>
   </div>
   <div class="foot-base">
-    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.5.0</span> · Uso educativo</span>
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.6.0</span> · Uso educativo</span>
     <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a></span>
   </div>
 </footer>
@@ -344,7 +345,7 @@ if (window.top !== window.self) window.top.location = window.self.location;
 // Claves de almacenamiento y versión
 const CLAVE_HORARIO = "colegio_horario";
 const CLAVE_TAREAS = "colegio_tareas";
-const VERSION = "v1.5.0";
+const VERSION = "v1.6.0";
 // Estado en memoria
 let listaClases = [];
 let listaTareas = [];
