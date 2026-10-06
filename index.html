@@ -3,138 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="dark">
 <meta name="description" content="Agenda Escolar: horario semanal y tareas 100% local. Sin cuentas, sin internet. Tus datos quedan en tu navegador.">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f6fb">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121212">
+<meta name="theme-color" content="#101010">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; object-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%233b82f6'/%3E%3Cg fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Crect x='8' y='4' width='11' height='16' rx='1.5'/%3E%3Cpath d='M5 8h2M5 12h2M5 16h2'/%3E%3C/g%3E%3C/svg%3E">
 <title>Agenda Escolar — Horario y Tareas</title>
 <style>
   :root {
-    color-scheme: light dark;
-    --fondo: #f4f6fb;
-    --tarjeta: #ffffff;
-    --borde: #e5e7eb;
-    --texto: #1f2937;
-    --muted: #6b7280;
-    --input-fondo: #ffffff;
-    --input-borde: #d1d5db;
-    --th-fondo: #eff6ff;
-    --clase-fondo: #dbeafe;
-    --clase-texto: #1e40af;
-    --ok-fondo: #dcfce7; --ok-texto: #15803d; --ok-borde: #86efac;
-    --err-fondo: #fee2e2; --err-texto: #b91c1c; --err-borde: #fca5a5;
-    --warn-fondo: #fef9c3; --warn-texto: #854d0e; --warn-borde: #fde047;
-    --principal: #3b82f6; --principal-hover: #2563eb;
-    --radio: 12px;
-    --sombra: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
-    --max: 1040px;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --fondo: #121212;
-      --tarjeta: #1e1e1e;
-      --borde: #2c2c2c;
-      --texto: #ededed;
-      --muted: #a3a3a3;
-      --input-fondo: #121212;
-      --input-borde: #3d3d3d;
-      --th-fondo: #121212;
-      --clase-fondo: #1e40af;
-      --clase-texto: #dbeafe;
-      --ok-fondo: #052e16; --ok-texto: #86efac; --ok-borde: #15803d;
-      --err-fondo: #450a0a; --err-texto: #fca5a5; --err-borde: #b91c1c;
-      --warn-fondo: #422006; --warn-texto: #fde68a; --warn-borde: #a16207;
-      --principal: #60a5fa; --principal-hover: #3b82f6;
-      --sombra: 0 1px 2px rgba(0,0,0,.5);
-    }
+    color-scheme: dark;
+    --color-obsidian-canvas: #101010;
+    --color-carbon-lift: #1d1a18;
+    --color-ash-stroke: #3d3a39;
+    --color-graphite-mid: #4d4947;
+    --color-warm-granite: #8a8380;
+    --color-pale-stone: #b8b3b0;
+    --color-bone: #eeeeee;
+    --color-chalk: #fafafa;
+    --color-signal-orange: #ee6018;
+    --color-metric-green: #a0ca92;
+    --font-geist: system-ui, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+    --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --page-max-width: 1200px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif; background: var(--fondo); color: var(--texto); line-height: 1.5; }
-  .skip-link { position: absolute; left: -999px; top: 0; background: var(--principal); color: #fff; padding: .6rem 1rem; border-radius: 0 0 8px 0; z-index: 50; }
+  body { font-family: var(--font-geist); font-weight: 400; background: #101010; color: #eeeeee; line-height: 1.5; letter-spacing: -0.025em; }
+  .skip-link { position: absolute; left: -999px; top: 0; background: #fafafa; color: #101010; padding: .6rem 1rem; border-radius: 0 0 3px 0; z-index: 50; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; text-decoration: none; }
   .skip-link:focus { left: 0; }
-  :focus-visible { outline: 2px solid var(--principal); outline-offset: 2px; }
-  header.top { background: var(--tarjeta); border-bottom: 1px solid var(--borde); position: sticky; top: 0; z-index: 10; }
-  .top-inner { max-width: var(--max); margin: 0 auto; padding: .8rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-  .marca { display: flex; align-items: center; gap: .6rem; }
-  .logo { width: 36px; height: 36px; border-radius: 9px; background: var(--principal); color: #fff; display: grid; place-items: center; font-weight: 800; }
-  .marca h1 { font-size: 1.1rem; line-height: 1.2; }
-  .marca small { color: var(--muted); font-weight: 400; }
-  .version { font-size: .72rem; background: var(--th-fondo); border: 1px solid var(--borde); padding: .1rem .5rem; border-radius: 20px; color: var(--muted); }
-  nav { display: flex; gap: .4rem; flex-wrap: wrap; }
-  nav a { color: var(--muted); text-decoration: none; font-size: .9rem; padding: .45rem .7rem; border-radius: 8px; min-height: 44px; display: inline-flex; align-items: center; }
-  nav a:hover { background: var(--th-fondo); color: var(--texto); }
-  main { max-width: var(--max); margin: 0 auto; padding: 1rem; display: grid; gap: 1rem; }
-  section, .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); box-shadow: var(--sombra); }
-  section { padding: 1rem; }
-  .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; flex-wrap: wrap; margin-bottom: .7rem; }
-  .sec-head h2 { font-size: 1.05rem; }
-  .sec-head p, .muted { color: var(--muted); font-size: .88rem; }
-  .panel-resumen { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; background: none; border: none; box-shadow: none; padding: 0; }
-  .tarjeta { padding: 1rem; display: flex; gap: .8rem; align-items: center; }
-  .tarjeta .icono { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
-  .azul .icono { background: var(--clase-fondo); color: var(--clase-texto); }
-  .verde .icono { background: var(--ok-fondo); color: var(--ok-texto); }
-  .tarjeta h2 { font-size: 1.9rem; line-height: 1; }
-  .tarjeta span { color: var(--muted); font-size: .85rem; }
-  .tarjeta.azul { border-left: 6px solid var(--principal); }
-  .tarjeta.verde { border-left: 6px solid #22c55e; }
-  form { display: grid; gap: .6rem; }
-  .fila { display: grid; gap: .6rem; grid-template-columns: 1fr 1fr; }
-  label { font-size: .82rem; font-weight: 600; }
-  input, select, textarea { width: 100%; padding: .6rem; border: 1px solid var(--input-borde); background: var(--input-fondo); color: var(--texto); border-radius: 8px; font-size: 1rem; }
-  .error { display: none; background: var(--err-fondo); color: var(--err-texto); border: 1px solid var(--err-borde); padding: .5rem .7rem; border-radius: 8px; font-size: .88rem; }
+  :focus-visible { outline: 1px solid #eeeeee; outline-offset: 2px; }
+  header.top { background: #101010; border-bottom: 1px solid #3d3a39; position: sticky; top: 0; z-index: 10; }
+  .top-inner { max-width: var(--page-max-width); margin: 0 auto; padding: 0 24px; min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .marca { display: flex; align-items: center; gap: 12px; }
+  .wordmark { font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: #eeeeee; text-decoration: none; white-space: nowrap; }
+  .wordmark .punto { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ee6018; margin-right: 8px; vertical-align: 1px; }
+  .marca h1 { font-family: var(--font-geist-mono); font-size: 12px; font-weight: 400; text-transform: uppercase; letter-spacing: .12em; color: #eeeeee; line-height: 1.2; }
+  .marca small { display: block; font-family: var(--font-geist); font-size: 14px; letter-spacing: 0; text-transform: none; color: #8a8380; font-weight: 400; }
+  .version { font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; background: transparent; border: 1px solid #3d3a39; padding: 2px 8px; border-radius: 3px; color: #8a8380; white-space: nowrap; }
+  nav { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+  nav a { color: #eeeeee; text-decoration: none; font-size: 14px; font-weight: 400; text-transform: uppercase; padding: 8px 14px; border-radius: 3px; min-height: 44px; display: inline-flex; align-items: center; border: 1px solid transparent; transition: color .15s cubic-bezier(.4,0,.2,1), border-color .15s cubic-bezier(.4,0,.2,1); }
+  nav a:hover { color: #fafafa; border-color: #3d3a39; }
+  main { max-width: var(--page-max-width); margin: 0 auto; padding: 32px 24px 96px; display: grid; gap: 96px; }
+  section { background: transparent; border: 1px solid #1d1a18; border-radius: 10px; padding: 24px; }
+  .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .sec-head h2 { font-size: 36px; font-weight: 400; line-height: 1.1; letter-spacing: -1.12px; }
+  .sec-head p, .muted { color: #8a8380; font-size: 14px; }
+  .eyebrow { font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; color: #b8b3b0; line-height: 1.2; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #ee6018; flex-shrink: 0; }
+  .panel-resumen { display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: transparent; border: 1px solid #1d1a18; border-radius: 10px; padding: 0; overflow: hidden; }
+  .tarjeta { padding: 20px; display: flex; gap: 16px; align-items: flex-start; background: transparent; border: none; border-radius: 0; }
+  .tarjeta + .tarjeta { border-left: 1px solid #1d1a18; }
+  .tarjeta .icono { width: 32px; height: 32px; border-radius: 3px; display: grid; place-items: center; flex-shrink: 0; background: #1d1a18; color: #eeeeee; border: 1px solid #3d3a39; }
+  .tarjeta h2 { font-size: 36px; font-weight: 400; line-height: 1.1; letter-spacing: -1.12px; color: #eeeeee; font-family: var(--font-geist); }
+  .tarjeta span { display: block; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.24px; line-height: 1.2; color: #b8b3b0; }
+  .tarjeta .meta { display: grid; gap: 8px; }
+  .tarjeta .linea-valor { display: flex; align-items: center; gap: 10px; }
+  .punto { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #4d4947; flex-shrink: 0; }
+  .punto-vivo { background: #ee6018; }
+  .punto-ok { background: #a0ca92; }
+  form { display: grid; gap: 16px; }
+  .fila { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+  label { display: block; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; color: #b8b3b0; margin-bottom: 8px; }
+  input, select, textarea { width: 100%; padding: 8px 14px; min-height: 44px; border: 1px solid #3d3a39; border-radius: 3px; background: #1d1a18; color: #eeeeee; font-size: 16px; line-height: 1.5; }
+  textarea { resize: vertical; }
+  input::placeholder, textarea::placeholder { color: #8a8380; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #eeeeee; outline-offset: 2px; border-color: #eeeeee; }
+  .error { display: none; background: #1d1a18; color: #ee6018; border: 1px solid #3d3a39; padding: 8px 16px; border-radius: 3px; font-size: 14px; }
   .error.visible { display: block; }
-  button { padding: .6rem 1rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; min-height: 44px; }
-  .btn-principal { background: var(--principal); color: #fff; }
-  .btn-principal:hover { background: var(--principal-hover); }
-  .btn-secundario { background: var(--th-fondo); color: var(--texto); border: 1px solid var(--borde); }
-  .btn-pequeno { padding: .3rem .6rem; font-size: .85rem; margin-right: .3rem; min-height: 36px; }
-  .btn-entregar { background: var(--ok-fondo); color: var(--ok-texto); border: 1px solid var(--ok-borde); }
-  .btn-borrar { background: var(--err-fondo); color: var(--err-texto); border: 1px solid var(--err-borde); }
-  .btn-editar { background: var(--warn-fondo); color: var(--warn-texto); border: 1px solid var(--warn-borde); }
+  button { min-height: 44px; cursor: pointer; transition: background-color .15s cubic-bezier(.4,0,.2,1), border-color .15s cubic-bezier(.4,0,.2,1), color .15s cubic-bezier(.4,0,.2,1); }
+  .btn-principal { background: #1f1d1c; color: #eeeeee; border: 1px solid #1f1d1c; border-radius: 3px; padding: 8px 14px; font-size: 14px; font-weight: 400; }
+  .btn-principal:hover { background: #2b2826; border-color: #2b2826; color: #fafafa; }
+  .btn-secundario { background: transparent; color: #eeeeee; border: 1px solid #3d3a39; border-radius: 3px; padding: 8px 14px; font-size: 14px; display: inline-flex; align-items: center; cursor: pointer; }
+  .btn-secundario:hover { border-color: #fafafa; color: #fafafa; }
+  .btn-pequeno { padding: 4px 14px; font-size: 14px; border-radius: 3px; margin-right: 8px; margin-top: 8px; min-height: 36px; }
+  .btn-entregar, .btn-borrar, .btn-editar { background: transparent; color: #eeeeee; border: 1px solid #3d3a39; border-radius: 3px; }
+  .btn-entregar:hover, .btn-borrar:hover, .btn-editar:hover { border-color: #fafafa; color: #fafafa; }
   .tabla-contenedor { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; min-width: 600px; }
-  th, td { border: 1px solid var(--borde); padding: .5rem; text-align: center; font-size: .9rem; }
-  th { background: var(--th-fondo); color: var(--texto); }
-  .clase { background: var(--clase-fondo); color: var(--clase-texto); border-radius: 6px; padding: .35rem; }
+  caption { font-size: 12px; color: #8a8380; }
+  th, td { border: 1px solid #3d3a39; padding: 8px; text-align: center; font-size: 14px; }
+  th { background: #1d1a18; color: #b8b3b0; font-family: var(--font-geist-mono); font-size: 12px; font-weight: 400; text-transform: uppercase; letter-spacing: -.02em; }
+  tbody td { color: #eeeeee; }
+  tbody td:first-child { color: #b8b3b0; white-space: nowrap; }
+  .clase { background: #1d1a18; color: #eeeeee; border: 1px solid #3d3a39; border-radius: 3px; padding: 8px; display: grid; gap: 4px; }
+  .clase b { font-weight: 400; }
   .etiqueta-dia { display: none; }
-  .filtros { display: flex; gap: .6rem; margin-bottom: .8rem; flex-wrap: wrap; align-items: center; }
-  .lista-tareas { display: grid; gap: .7rem; }
-  .tarea { border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 10px; padding: .8rem; display: grid; gap: .4rem; }
-  .tarea-cabeza { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .4rem; }
-  .estado { font-size: .75rem; font-weight: 700; padding: .2rem .6rem; border-radius: 20px; }
-  .pendiente { background: var(--warn-fondo); color: var(--warn-texto); }
-  .entregada { background: var(--ok-fondo); color: var(--ok-texto); }
-  .vencida { background: var(--err-fondo); color: var(--err-texto); }
-  .vacio { color: var(--muted); text-align: center; padding: 1rem; }
-  .legal-grid { display: grid; gap: .8rem; grid-template-columns: repeat(3, 1fr); margin: .8rem 0; }
-  .legal-grid article { border: 1px solid var(--borde); border-radius: 10px; padding: .8rem; background: var(--input-fondo); }
-  .legal-grid h3 { font-size: .92rem; margin-bottom: .3rem; }
-  .legal-grid p, .legal-grid li { font-size: .85rem; color: var(--muted); }
-  .legal-grid ul { padding-left: 1.1rem; }
-  .datos-acciones { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .5rem; }
-  footer { border-top: 1px solid var(--borde); background: var(--tarjeta); }
-  .foot-inner { max-width: var(--max); margin: 0 auto; padding: 1rem; display: flex; justify-content: space-between; gap: .6rem; flex-wrap: wrap; color: var(--muted); font-size: .85rem; }
-  footer a { color: var(--muted); }
-  @media (max-width: 700px) { .legal-grid { grid-template-columns: 1fr; } }
+  .filtros { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+  .filtros label { margin-bottom: 0; }
+  .filtros select { width: auto; min-width: 220px; }
+  .lista-tareas { display: grid; gap: 24px; }
+  .tarea { border: 1px solid #3d3a39; background: #1d1a18; border-radius: 10px; padding: 24px; display: grid; gap: 8px; }
+  .tarea-cabeza { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .tarea-cabeza b { font-weight: 400; color: #eeeeee; }
+  .tarea small.muted, .tarea .muted { color: #8a8380; }
+  .estado { font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; padding: 4px 14px; border-radius: 3px; border: 1px solid #3d3a39; background: #1d1a18; line-height: 1.2; white-space: nowrap; }
+  .estado::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; background: #b8b3b0; }
+  .estado.pendiente, .pendiente { color: #b8b3b0; }
+  .estado.entregada, .entregada { color: #a0ca92; }
+  .estado.entregada::before { background: #a0ca92; }
+  .estado.vencida, .vencida { color: #ee6018; }
+  .estado.vencida::before { background: #ee6018; }
+  .vacio { color: #8a8380; text-align: center; padding: 24px; font-size: 14px; }
+  .legal-grid { display: grid; gap: 24px; grid-template-columns: repeat(3, 1fr); margin: 16px 0; }
+  .legal-grid article { border: 1px solid #3d3a39; border-radius: 10px; padding: 24px; background: transparent; }
+  .legal-grid h3 { font-size: 16px; font-weight: 400; margin-bottom: 8px; color: #eeeeee; }
+  .legal-grid p, .legal-grid li { font-size: 14px; color: #8a8380; }
+  .legal-grid ul { padding-left: 16px; display: grid; gap: 8px; }
+  .legal-grid code { font-family: var(--font-geist-mono); font-size: 12px; color: #b8b3b0; }
+  .datos-acciones { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
+  .cta-card { background: #eeeeee; color: #101010; border: none; border-radius: 10px; padding: 24px; }
+  .cta-card .eyebrow { color: #101010; }
+  .cta-card h2 { color: #101010; }
+  .cta-card p, .cta-card .muted { color: #4d4947; }
+  .cta-card #infoRespaldo { color: #4d4947; margin-top: 8px; font-size: 14px; }
+  .cta-card .datos-acciones { margin-top: 16px; }
+  .cta-card .btn-secundario, .cta-card .btn-borrar { background: transparent; border: 1px solid #101010; color: #101010; }
+  .cta-card .btn-secundario:hover, .cta-card .btn-borrar:hover { background: #101010; color: #eeeeee; border-color: #101010; }
+  details { border: 1px solid #3d3a39; border-radius: 3px; padding: 8px 14px; margin-top: 8px; background: transparent; }
+  summary { cursor: pointer; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; color: #eeeeee; min-height: 44px; display: flex; align-items: center; }
+  summary:hover { color: #fafafa; }
+  details p { margin-top: 8px; }
+  footer { border-top: 1px solid #3d3a39; background: #101010; }
+  .foot-inner { max-width: var(--page-max-width); margin: 0 auto; padding: 56px 24px 40px; display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 24px 36px; color: #8a8380; font-size: 14px; }
+  .foot-col h3 { font-family: var(--font-geist-mono); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: -.02em; color: #eeeeee; margin-bottom: 16px; }
+  .foot-col ul { list-style: none; display: grid; gap: 10px; }
+  .foot-col p { color: #8a8380; font-size: 14px; }
+  footer a { color: #8a8380; text-decoration: none; font-size: 14px; transition: color .15s cubic-bezier(.4,0,.2,1); }
+  footer a:hover { color: #fafafa; }
+  .foot-base { max-width: var(--page-max-width); margin: 0 auto; padding: 0 24px 32px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: #8a8380; font-size: 14px; }
+  @media (max-width: 700px) { .legal-grid { grid-template-columns: 1fr; } .foot-inner { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 600px) {
-    main { padding: .8rem; }
-    section { padding: .8rem; }
+    main { padding: 16px; gap: 48px; }
+    section { padding: 16px; }
+    .sec-head h2 { font-size: 28px; }
     .panel-resumen { grid-template-columns: 1fr; }
-    .tarjeta h2 { font-size: 1.5rem; }
+    .tarjeta + .tarjeta { border-left: none; border-top: 1px solid #1d1a18; }
+    .tarjeta h2 { font-size: 28px; }
     .fila { grid-template-columns: 1fr; }
+    .filtros { flex-direction: column; align-items: stretch; }
+    .filtros select { width: 100%; }
     .tabla-contenedor { overflow: visible; }
     table { min-width: 0; border: none; }
     thead { display: none; }
     table, tbody, tr, td { display: block; width: 100%; }
-    tbody tr { border: 1px solid var(--borde); border-radius: 10px; margin-bottom: .6rem; padding: .5rem; background: var(--tarjeta); }
-    tbody td { border: none; text-align: left; padding: .3rem; }
-    tbody td:first-child { border-bottom: 1px solid var(--borde); margin-bottom: .3rem; font-size: 1rem; }
-    .etiqueta-dia { display: block; font-size: .75rem; font-weight: 700; color: var(--muted); }
+    tbody tr { border: 1px solid #3d3a39; border-radius: 10px; margin-bottom: 16px; padding: 8px; background: #1d1a18; }
+    tbody td { border: none; text-align: left; padding: 8px; }
+    tbody td:first-child { border-bottom: 1px solid #3d3a39; margin-bottom: 8px; font-size: 16px; }
+    .etiqueta-dia { display: block; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; color: #8a8380; }
     td.vacia { display: none; }
+    .tarea { padding: 16px; }
+    .legal-grid { grid-template-columns: 1fr; }
+    .cta-card { padding: 24px 16px; }
+    .datos-acciones { flex-direction: column; align-items: stretch; }
+    .datos-acciones .btn-secundario { justify-content: center; text-align: center; }
+    .foot-inner { grid-template-columns: 1fr; padding: 40px 16px 24px; }
+    .foot-base { padding: 0 16px 24px; }
   }
 </style>
 </head>
@@ -144,9 +167,9 @@
 <header class="top">
   <div class="top-inner">
     <div class="marca">
-      <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="7" y="3" width="13" height="18" rx="2"/><path d="M4 7h3M4 12h3M4 17h3"/><path d="M11 9h6M11 13h6"/></svg></div>
+      <a class="wordmark" href="#contenido"><span class="punto punto-vivo" aria-hidden="true"></span>Agenda·Escolar</a>
       <div>
-        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.3.2</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.4.0</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -161,23 +184,33 @@
 
 <main id="contenido">
   <section id="resumen" aria-labelledby="tituloResumen">
+    <p class="eyebrow">Panel · hoy</p>
     <div class="sec-head">
       <h2 id="tituloResumen">Resumen de hoy</h2>
       <p id="fechaHoy" class="muted"></p>
     </div>
     <div class="panel-resumen" aria-live="polite">
       <div class="tarjeta azul">
-        <div class="icono" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
-        <div><h2 id="textoClasesHoy">0</h2><span id="textoDiaHoy">Hoy tienes 0 clases</span></div>
+        <div class="icono" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div class="meta">
+          <span>Clases hoy</span>
+          <div class="linea-valor"><h2 id="textoClasesHoy">0</h2><span class="punto punto-vivo" aria-hidden="true"></span></div>
+          <span id="textoDiaHoy">Hoy tienes 0 clases</span>
+        </div>
       </div>
       <div class="tarjeta verde">
-        <div class="icono" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-        <div><h2 id="textoTareasPendientes">0</h2><span id="textoTareasDetalle">Tienes 0 tareas pendientes</span></div>
+        <div class="icono" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="meta">
+          <span>Tareas pendientes</span>
+          <div class="linea-valor"><h2 id="textoTareasPendientes">0</h2><span class="punto punto-vivo" aria-hidden="true"></span></div>
+          <span id="textoTareasDetalle">Tienes 0 tareas pendientes</span>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="horario" aria-labelledby="tituloHorario">
+    <p class="eyebrow">01 — Horario semanal</p>
     <div class="sec-head">
       <div><h2 id="tituloHorario">Horario semanal</h2><p>Lunes a viernes · se guarda en este navegador</p></div>
       <p class="muted" id="conteoClases"></p>
@@ -205,6 +238,8 @@
   </section>
 
   <section id="tareas" aria-labelledby="tituloTareas">
+    <p class="eyebrow">02 — Tareas</p>
+    <p class="eyebrow">02 — Tareas</p>
     <div class="sec-head">
       <div><h2 id="tituloTareas">Tareas</h2><p>El estado se calcula solo con la fecha de entrega</p></div>
       <p class="muted" id="conteoTareas"></p>
@@ -221,14 +256,29 @@
     </form>
     <br>
     <div class="filtros">
-      <label for="filtroMateria">Filtrar por materia</label>
+      <label for="filtroMateria">Materia</label>
       <select id="filtroMateria"><option value="todas">Todas las materias</option></select>
     </div>
     <div class="lista-tareas" id="listaTareas" aria-live="polite"></div>
   </section>
 
+  <section id="respaldo" class="cta-card" aria-labelledby="tituloRespaldo">
+    <p class="eyebrow">Respaldo local</p>
+    <h2 id="tituloRespaldo">Tu copia, tus datos</h2>
+    <p class="muted">Todo queda en este navegador. Exporta tu JSON antes de borrar o cambiar de dispositivo.</p>
+    <div class="datos-acciones">
+      <button class="btn-secundario" id="btnExportar" type="button">Exportar copia (JSON)</button>
+      <label class="btn-secundario" for="inputImportar">Importar copia</label>
+      <input type="file" id="inputImportar" accept="application/json" hidden>
+      <button class="btn-secundario" id="btnDescargarApp" type="button">Descargar app offline (.html)</button>
+      <button class="btn-borrar" id="btnBorrarTodo" type="button">Borrar todos mis datos</button>
+    </div>
+    <p class="muted" id="infoRespaldo" aria-live="polite"></p>
+  </section>
+
   <section id="legal" aria-labelledby="tituloLegal">
-    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.3.2 · Uso educativo.</p></div></div>
+    <p class="eyebrow">03 — Privacidad y datos</p>
+    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.4.0 · Uso educativo.</p></div></div>
     <div class="legal-grid">
       <article><h3>1. Responsable y contacto</h3><p>Responsable: el autor del proyecto. Contacto: jhormaza.dev@gmail.com. Jurisdicción: Colombia (Ley 1581 de 2012). Esta app es una página estática publicada en GitHub Pages: no opera cuentas ni servidores propios.</p></article>
       <article><h3>2. Menores de edad</h3><p>Uso con acompañamiento de acudiente o docente. No hay registro, login ni recolección en servidor. No se pide nombre, documento ni ubicación. Si eres acudiente y tienes dudas, escribe a jhormaza.dev@gmail.com.</p></article>
@@ -237,14 +287,6 @@
       <article><h3>5. Seguridad</h3><ul><li>Un solo archivo, sin dependencias ni CDNs; sin conexiones externas (<code>connect-src 'none'</code>).</li><li>Entradas saneadas antes de mostrarse (anti-XSS) y sin <code>onclick</code> inline.</li><li>Si encuentras un fallo, repórtalo a jhormaza.dev@gmail.com antes de difundirlo.</li></ul></article>
       <article><h3>6. Tus derechos</h3><p>Como nada viaja a un servidor, ejerces tus derechos localmente: consulta con Exportar, rectifica editando, suprime con “Borrar todos mis datos” o limpiando el navegador. Reclamos Ley 1581: jhormaza.dev@gmail.com. Cambios de esta política se publican aquí con nueva fecha y versión.</p></article>
     </div>
-    <div class="datos-acciones">
-      <button class="btn-secundario" id="btnExportar" type="button">Exportar copia (JSON)</button>
-      <label class="btn-secundario" for="inputImportar" style="display:inline-flex;align-items:center;cursor:pointer">Importar copia</label>
-      <input type="file" id="inputImportar" accept="application/json" hidden>
-      <button class="btn-secundario" id="btnDescargarApp" type="button">Descargar app offline (.html)</button>
-      <button class="btn-borrar" id="btnBorrarTodo" type="button">Borrar todos mis datos</button>
-    </div>
-    <p class="muted" id="infoRespaldo" style="margin-top:.5rem"></p>
     <div class="legal-grid" style="grid-template-columns:1fr 1fr">
       <article><h3>Acceso directo sin internet</h3>
         <details><summary>Android (Chrome)</summary><p class="muted">Abre la página, toca ⋮ > Añadir a pantalla de inicio > Añadir. Se abre a pantalla completa.</p></details>
@@ -261,8 +303,36 @@
 
 <footer>
   <div class="foot-inner">
-    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.3.2</span> · Uso educativo · jhormaza.dev@gmail.com</span>
-    <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a> · <a href="#contenido">Volver arriba</a></span>
+    <div class="foot-col">
+      <h3>Agenda Escolar</h3>
+      <p>Horario y tareas · 100% local, sin cuentas. Tus datos quedan en tu navegador.</p>
+    </div>
+    <div class="foot-col">
+      <h3>App</h3>
+      <ul>
+        <li><a href="#resumen">Resumen</a></li>
+        <li><a href="#horario">Horario</a></li>
+        <li><a href="#tareas">Tareas</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h3>Legal</h3>
+      <ul>
+        <li><a href="#legal">Privacidad</a></li>
+        <li><a href="#legal">Términos</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h3>Contacto</h3>
+      <ul>
+        <li><a href="mailto:jhormaza.dev@gmail.com">jhormaza.dev@gmail.com</a></li>
+        <li><a href="#contenido">Volver arriba</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-base">
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.4.0</span> · Uso educativo</span>
+    <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a></span>
   </div>
 </footer>
 
@@ -273,7 +343,7 @@ if (window.top !== window.self) window.top.location = window.self.location;
 // Claves de almacenamiento y versión
 const CLAVE_HORARIO = "colegio_horario";
 const CLAVE_TAREAS = "colegio_tareas";
-const VERSION = "v1.3.2";
+const VERSION = "v1.4.0";
 // Estado en memoria
 let listaClases = [];
 let listaTareas = [];
