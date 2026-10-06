@@ -169,7 +169,7 @@
     <div class="marca">
       <a class="wordmark" href="#contenido"><span class="punto punto-vivo" aria-hidden="true"></span>Agenda·Escolar</a>
       <div>
-        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.4.0</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.5.0</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -268,6 +268,7 @@
     <p class="muted">Todo queda en este navegador. Exporta tu JSON antes de borrar o cambiar de dispositivo.</p>
     <div class="datos-acciones">
       <button class="btn-secundario" id="btnExportar" type="button">Exportar copia (JSON)</button>
+      <button class="btn-secundario" id="btnCompartir" type="button">Compartir</button>
       <label class="btn-secundario" for="inputImportar">Importar copia</label>
       <input type="file" id="inputImportar" accept="application/json" hidden>
       <button class="btn-secundario" id="btnDescargarApp" type="button">Descargar app offline (.html)</button>
@@ -278,7 +279,7 @@
 
   <section id="legal" aria-labelledby="tituloLegal">
     <p class="eyebrow">03 — Privacidad y datos</p>
-    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.4.0 · Uso educativo.</p></div></div>
+    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.5.0 · Uso educativo.</p></div></div>
     <div class="legal-grid">
       <article><h3>1. Responsable y contacto</h3><p>Responsable: el autor del proyecto. Contacto: jhormaza.dev@gmail.com. Jurisdicción: Colombia (Ley 1581 de 2012). Esta app es una página estática publicada en GitHub Pages: no opera cuentas ni servidores propios.</p></article>
       <article><h3>2. Menores de edad</h3><p>Uso con acompañamiento de acudiente o docente. No hay registro, login ni recolección en servidor. No se pide nombre, documento ni ubicación. Si eres acudiente y tienes dudas, escribe a jhormaza.dev@gmail.com.</p></article>
@@ -331,7 +332,7 @@
     </div>
   </div>
   <div class="foot-base">
-    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.4.0</span> · Uso educativo</span>
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.5.0</span> · Uso educativo</span>
     <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a></span>
   </div>
 </footer>
@@ -343,7 +344,7 @@ if (window.top !== window.self) window.top.location = window.self.location;
 // Claves de almacenamiento y versión
 const CLAVE_HORARIO = "colegio_horario";
 const CLAVE_TAREAS = "colegio_tareas";
-const VERSION = "v1.4.0";
+const VERSION = "v1.5.0";
 // Estado en memoria
 let listaClases = [];
 let listaTareas = [];
@@ -585,10 +586,88 @@ function actualizarFiltro() {
   });
   if ([...select.options].some(o => o.value === actual)) select.value = actual;
 }
+// Arma el objeto de respaldo con fecha inyectada (pura y testeable)
+function construirRespaldo(horario, tareas, hoyISO) {
+  return { app: "agenda-escolar", version: VERSION, exportado: hoyISO, horario: horario, tareas: tareas };
+}
+// Dice si hay al menos un dato para enviar
+function hayDatos(horario, tareas) {
+  return horario.length > 0 || tareas.length > 0;
+}
+// Elige vía de envío según capacidades del navegador
+function elegirVia(puedeArchivos, hayPortapapeles, hayClasico) {
+  if (puedeArchivos) return "archivos";
+  if (hayPortapapeles) return "portapapeles";
+  if (hayClasico) return "clasico";
+  return "nada";
+}
+// Detecta si el navegador comparte archivos
+function puedeCompartirArchivos() {
+  try {
+    const prueba = new File(["x"], "x.json", { type: "application/json" });
+    return Boolean(navigator.share && navigator.canShare && navigator.canShare({ files: [prueba] }));
+  } catch { return false; }
+}
+// Detecta portapapeles moderno
+function hayPortapapeles() {
+  return Boolean(navigator.clipboard && navigator.clipboard.writeText);
+}
+// Detecta copiado clásico (último recurso)
+function hayClasico() {
+  return typeof document.execCommand === "function";
+}
+// Muestra aviso en la tarjeta de respaldo
+function avisarRespaldo(mensaje) {
+  document.getElementById("infoRespaldo").textContent = mensaje;
+}
+// Abre el diálogo nativo con el respaldo adjunto
+async function compartirArchivo(texto) {
+  const archivo = new File([texto], "agenda-escolar-respaldo.json", { type: "application/json" });
+  try {
+    await navigator.share({ files: [archivo] });
+  } catch (error) {
+    if (error && error.name !== "AbortError") avisarRespaldo("No se pudo compartir.");
+  }
+}
+// Copia con el portapapeles moderno
+async function copiarModerno(texto) {
+  try {
+    await navigator.clipboard.writeText(texto);
+    avisarRespaldo("Respaldo copiado. Pégalo donde quieras.");
+  } catch {
+    avisarRespaldo("Portapapeles bloqueado por el navegador.");
+  }
+}
+// Copia con técnica clásica para file://
+function copiarClasico(texto) {
+  try {
+    const caja = document.createElement("textarea");
+    caja.value = texto;
+    document.body.appendChild(caja);
+    caja.select();
+    const copiado = document.execCommand("copy");
+    caja.remove();
+    avisarRespaldo(copiado ? "Respaldo copiado. Pégalo donde quieras." : "Abre la versión en línea para compartir.");
+  } catch {
+    avisarRespaldo("Abre la versión en línea para compartir.");
+  }
+}
+// Orquesta el envío del respaldo por la mejor vía
+async function compartirRespaldo() {
+  if (!hayDatos(listaClases, listaTareas)) { avisarRespaldo("Nada que enviar: agrega clases o tareas."); return; }
+  const texto = JSON.stringify(construirRespaldo(listaClases, listaTareas, new Date().toISOString()), null, 2);
+  if (new Blob([texto]).size > 1024 * 1024) { avisarRespaldo("Respaldo muy grande (máx 1 MB)."); return; }
+  if (!confirm("Tus datos saldrán de este dispositivo. ¿Enviar respaldo?")) return;
+  const via = elegirVia(puedeCompartirArchivos(), hayPortapapeles(), hayClasico());
+  if (via === "archivos") { await compartirArchivo(texto); return; }
+  if (via === "portapapeles") { await copiarModerno(texto); return; }
+  if (via === "clasico") { copiarClasico(texto); return; }
+  avisarRespaldo("Abre la versión en línea para compartir.");
+}
 // Descarga respaldo JSON local
 function exportarDatos() {
-  const respaldo = { app: "agenda-escolar", version: VERSION, exportado: new Date().toISOString(), horario: listaClases, tareas: listaTareas };
-  const url = URL.createObjectURL(new Blob([JSON.stringify(respaldo, null, 2)], { type: "application/json" }));
+  const texto = JSON.stringify(construirRespaldo(listaClases, listaTareas, new Date().toISOString()), null, 2);
+  const url = URL.createObjectURL(new Blob([texto], { type: "application/json" }));
   const a = document.createElement("a");
   a.href = url; a.download = "agenda-escolar-respaldo.json";
   document.body.appendChild(a); a.click(); a.remove();
@@ -676,6 +755,7 @@ function iniciarApp() {
     if (b.dataset.accion === "entregar-tarea") marcarEntregada(b.dataset.id);
   });
   document.getElementById("btnExportar").addEventListener("click", exportarDatos);
+  document.getElementById("btnCompartir").addEventListener("click", compartirRespaldo);
   document.getElementById("btnDescargarApp").addEventListener("click", descargarApp);
   document.getElementById("inputImportar").addEventListener("change", e => { importarDatos(e.target.files[0]); e.target.value = ""; });
   document.getElementById("btnBorrarTodo").addEventListener("click", borrarTodo);
