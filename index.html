@@ -7,7 +7,8 @@
 <meta name="description" content="Agenda Escolar: horario semanal y tareas 100% local. Sin cuentas, sin internet. Tus datos quedan en tu navegador.">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f6fb">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121212">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; object-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%233b82f6'/%3E%3Cg fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Crect x='8' y='4' width='11' height='16' rx='1.5'/%3E%3Cpath d='M5 8h2M5 12h2M5 16h2'/%3E%3C/g%3E%3C/svg%3E">
 <title>Agenda Escolar — Horario y Tareas</title>
 <style>
@@ -145,7 +146,7 @@
     <div class="marca">
       <div class="logo" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="7" y="3" width="13" height="18" rx="2"/><path d="M4 7h3M4 12h3M4 17h3"/><path d="M11 9h6M11 13h6"/></svg></div>
       <div>
-        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.3.1</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.3.2</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -227,7 +228,7 @@
   </section>
 
   <section id="legal" aria-labelledby="tituloLegal">
-    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-05 · Versión v1.2.0 · Uso educativo.</p></div></div>
+    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.3.2 · Uso educativo.</p></div></div>
     <div class="legal-grid">
       <article><h3>1. Responsable y contacto</h3><p>Responsable: el autor del proyecto. Contacto: jhormaza.dev@gmail.com. Jurisdicción: Colombia (Ley 1581 de 2012). Esta app es una página estática publicada en GitHub Pages: no opera cuentas ni servidores propios.</p></article>
       <article><h3>2. Menores de edad</h3><p>Uso con acompañamiento de acudiente o docente. No hay registro, login ni recolección en servidor. No se pide nombre, documento ni ubicación. Si eres acudiente y tienes dudas, escribe a jhormaza.dev@gmail.com.</p></article>
@@ -260,17 +261,19 @@
 
 <footer>
   <div class="foot-inner">
-    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.3.1</span> · Uso educativo · jhormaza.dev@gmail.com</span>
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.3.2</span> · Uso educativo · jhormaza.dev@gmail.com</span>
     <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a> · <a href="#contenido">Volver arriba</a></span>
   </div>
 </footer>
 
 <script>
 "use strict";
+// Rompe iframes de terceros (Pages no permite headers anti-clickjacking)
+if (window.top !== window.self) window.top.location = window.self.location;
 // Claves de almacenamiento y versión
 const CLAVE_HORARIO = "colegio_horario";
 const CLAVE_TAREAS = "colegio_tareas";
-const VERSION = "v1.3.1";
+const VERSION = "v1.3.2";
 // Estado en memoria
 let listaClases = [];
 let listaTareas = [];
@@ -482,7 +485,6 @@ function mostrarTareas() {
     tarjeta.append(cabeza, desc, fecha, acciones);
     cont.appendChild(tarjeta);
   });
-  void escaparTexto;
 }
 // Marca tarea como entregada
 function marcarEntregada(id) {
@@ -523,16 +525,31 @@ function exportarDatos() {
   URL.revokeObjectURL(url);
   document.getElementById("infoRespaldo").textContent = "Copia exportada. Guárdala en un lugar seguro.";
 }
-// Restaura respaldo validando estructura mínima
+// Valida una clase importada y la normaliza (null si inválida)
+function normalizarClase(c) {
+  if (!c || typeof c !== "object") return null;
+  if (typeof c.id !== "string" || !diasSemana.includes(c.dia)) return null;
+  const hora = /^\d{2}:\d{2}$/;
+  if (!hora.test(c.inicio || "") || !hora.test(c.fin || "") || c.fin <= c.inicio) return null;
+  return { id: c.id.slice(0, 40), dia: c.dia, materia: String(c.materia || "").slice(0, 60), inicio: c.inicio, fin: c.fin };
+}
+// Valida una tarea importada y la normaliza (null si inválida)
+function normalizarTarea(t) {
+  if (!t || typeof t !== "object") return null;
+  if (typeof t.id !== "string" || /^\d{4}-\d{2}-\d{2}$/.test(t.fechaEntrega || "") === false) return null;
+  return { id: t.id.slice(0, 40), materia: String(t.materia || "").slice(0, 60), titulo: String(t.titulo || "").slice(0, 80), descripcion: String(t.descripcion || "").slice(0, 500), fechaEntrega: t.fechaEntrega, entregada: t.entregada === true };
+}
+// Restaura respaldo validando tipos, rangos y tamaño
 function importarDatos(archivo) {
   if (!archivo) return;
+  if (archivo.size > 1024 * 1024) { document.getElementById("infoRespaldo").textContent = "Archivo muy grande (máx 1 MB)."; return; }
   const lector = new FileReader();
   lector.onload = () => {
     try {
       const datos = JSON.parse(lector.result);
       if (!Array.isArray(datos.horario) || !Array.isArray(datos.tareas)) throw new Error("formato");
-      listaClases = datos.horario.filter(c => c.id && c.dia && c.inicio && c.fin);
-      listaTareas = datos.tareas.filter(t => t.id && t.materia && t.fechaEntrega);
+      listaClases = datos.horario.map(normalizarClase).filter(Boolean);
+      listaTareas = datos.tareas.map(normalizarTarea).filter(Boolean);
       guardarDatos(); mostrarTodo();
       document.getElementById("infoRespaldo").textContent = "Copia importada correctamente.";
     } catch { document.getElementById("infoRespaldo").textContent = "Archivo inválido. No se importó nada."; }
@@ -544,6 +561,8 @@ function descargarApp() {
   const copia = document.documentElement.cloneNode(true);
   copia.querySelector("#tablaHorario").textContent = "";
   copia.querySelector("#listaTareas").textContent = "";
+  copia.querySelectorAll("input, textarea").forEach(el => { el.value = ""; });
+  copia.querySelectorAll("select").forEach(el => { el.selectedIndex = 0 });
   const url = URL.createObjectURL(new Blob(["<!DOCTYPE html>\n" + copia.outerHTML], { type: "text/html" }));
   const a = document.createElement("a");
   a.href = url; a.download = "agenda-escolar.html";
@@ -560,12 +579,11 @@ function borrarTodo() {
   mostrarTodo();
   document.getElementById("infoRespaldo").textContent = "Datos locales eliminados.";
 }
-// Redibuja resumen, horario y tareas
+// Redibuja cada módulo aislado para que un fallo no tumbe todo
 function mostrarTodo() {
-  mostrarResumen();
-  mostrarHorario();
-  actualizarFiltro();
-  mostrarTareas();
+  [mostrarResumen, mostrarHorario, actualizarFiltro, mostrarTareas].forEach(fn => {
+    try { fn(); } catch { /* Módulo con datos corruptos: se omite sin romper la app */ }
+  });
 }
 // Cablea eventos con delegación (sin onclick inline)
 function iniciarApp() {
