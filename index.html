@@ -28,6 +28,7 @@
     --page-max-width: 1200px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: clip; }
   body { font-family: var(--font-geist); font-weight: 400; background: #101010; color: #eeeeee; line-height: 1.5; letter-spacing: -0.025em; }
   .skip-link { position: absolute; left: -999px; top: 0; background: #fafafa; color: #101010; padding: .6rem 1rem; border-radius: 0 0 3px 0; z-index: 50; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; text-decoration: none; }
   .skip-link:focus { left: 0; }
@@ -142,7 +143,7 @@
     .tarjeta h2 { font-size: 28px; }
     .fila { grid-template-columns: 1fr; }
     .filtros { flex-direction: column; align-items: stretch; }
-    .filtros select { width: 100%; }
+    .filtros select { width: 100%; min-width: 0; }
     .tabla-contenedor { overflow: visible; }
     table { min-width: 0; border: none; }
     thead { display: none; }
@@ -170,7 +171,7 @@
     <div class="marca">
       <a class="wordmark" href="#contenido"><span class="punto punto-vivo" aria-hidden="true"></span>Agenda·Escolar</a>
       <div>
-        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.6.0</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.6.1</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -280,7 +281,7 @@
 
   <section id="legal" aria-labelledby="tituloLegal">
     <p class="eyebrow">03 — Privacidad y datos</p>
-    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.6.0 · Uso educativo.</p></div></div>
+    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.6.1 · Uso educativo.</p></div></div>
     <div class="legal-grid">
       <article><h3>1. Responsable y contacto</h3><p>Responsable: el autor del proyecto. Contacto: jhormaza.dev@gmail.com. Jurisdicción: Colombia (Ley 1581 de 2012). Esta app es una página estática publicada en GitHub Pages: no opera cuentas ni servidores propios.</p></article>
       <article><h3>2. Menores de edad</h3><p>Uso con acompañamiento de acudiente o docente. No hay registro, login ni recolección en servidor. No se pide nombre, documento ni ubicación. Si eres acudiente y tienes dudas, escribe a jhormaza.dev@gmail.com.</p></article>
@@ -333,7 +334,7 @@
     </div>
   </div>
   <div class="foot-base">
-    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.6.0</span> · Uso educativo</span>
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.6.1</span> · Uso educativo</span>
     <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a></span>
   </div>
 </footer>
@@ -345,7 +346,7 @@ if (window.top !== window.self) window.top.location = window.self.location;
 // Claves de almacenamiento y versión
 const CLAVE_HORARIO = "colegio_horario";
 const CLAVE_TAREAS = "colegio_tareas";
-const VERSION = "v1.6.0";
+const VERSION = "v1.6.1";
 // Estado en memoria
 let listaClases = [];
 let listaTareas = [];
