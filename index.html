@@ -113,6 +113,7 @@
   .legal-grid p, .legal-grid li { font-size: 14px; color: #8a8380; }
   .legal-grid ul { padding-left: 16px; display: grid; gap: 8px; }
   .legal-grid code { font-family: var(--font-geist-mono); font-size: 12px; color: #b8b3b0; }
+  .legal-doble { grid-template-columns: 1fr 1fr; }
   .datos-acciones { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
   .cta-card { background: #eeeeee; color: #101010; border: none; border-radius: 10px; padding: 24px; }
   .cta-card .eyebrow { color: #101010; }
@@ -134,16 +135,31 @@
   footer a { color: #8a8380; text-decoration: none; font-size: 14px; transition: color .15s cubic-bezier(.4,0,.2,1); }
   footer a:hover { color: #fafafa; }
   .foot-base { max-width: var(--page-max-width); margin: 0 auto; padding: 0 24px 32px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: #8a8380; font-size: 14px; }
-  @media (max-width: 700px) { .legal-grid { grid-template-columns: 1fr; } .foot-inner { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 900px) { .legal-grid { grid-template-columns: 1fr 1fr; } .legal-doble { grid-template-columns: 1fr 1fr; } .foot-inner { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 600px) {
+    .top-inner { padding: 0 16px; gap: 12px; min-height: 56px; justify-content: center; text-align: center; }
+    .marca { width: 100%; justify-content: center; text-align: center; }
+    .marca small { display: none; }
+    .marca h1 { font-size: 11px; }
+    nav { width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+    nav a { justify-content: center; text-align: center; padding: 8px 4px; font-size: 12px; }
     main { padding: 16px; gap: 48px; }
-    section { padding: 16px; }
+    section { padding: 16px; text-align: center; }
+    .eyebrow { justify-content: center; }
+    .sec-head { justify-content: center; text-align: center; }
     .sec-head h2 { font-size: 28px; }
     .panel-resumen { grid-template-columns: 1fr; }
+    .tarjeta { flex-direction: column; align-items: center; text-align: center; }
+    .tarjeta .linea-valor { justify-content: center; }
+    .tarjeta .meta { justify-items: center; }
     .tarjeta + .tarjeta { border-left: none; border-top: 1px solid #1d1a18; }
     .tarjeta h2 { font-size: 28px; }
     .fila { grid-template-columns: 1fr; }
-    .filtros { flex-direction: column; align-items: stretch; }
+    form { text-align: center; }
+    label { text-align: center; }
+    input, select, textarea { text-align: center; }
+    .error { text-align: center; }
+    .filtros { flex-direction: column; align-items: center; }
     .filtros select { width: 100%; min-width: 0; }
     .tabla-contenedor { overflow: visible; }
     table { min-width: 0; border: none; }
@@ -151,17 +167,36 @@
     caption { display: block; width: 100%; }
     table, tbody, tr, td { display: block; width: 100%; }
     tbody tr { border: 1px solid #3d3a39; border-radius: 10px; margin-bottom: 16px; padding: 8px; background: #1d1a18; }
-    tbody td { border: none; text-align: left; padding: 8px; }
+    tbody td { border: none; text-align: center; padding: 8px; }
     tbody td:first-child { border-bottom: 1px solid #3d3a39; margin-bottom: 8px; font-size: 16px; }
+    caption { text-align: center; }
+    .clase { text-align: center; justify-items: center; }
     .etiqueta-dia { display: block; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; color: #8a8380; }
     td.vacia { display: none; }
-    .tarea { padding: 16px; }
+    .tarea { padding: 16px; text-align: center; }
+    .tarea-cabeza { justify-content: center; text-align: center; }
+    .tarea-cabeza b { text-align: center; }
     .legal-grid { grid-template-columns: 1fr; }
-    .cta-card { padding: 24px 16px; }
-    .datos-acciones { flex-direction: column; align-items: stretch; }
+    .legal-grid article { text-align: center; }
+    .legal-grid ul { padding-left: 0; list-style: none; }
+    .cta-card { padding: 24px 16px; text-align: center; }
+    .datos-acciones { flex-direction: column; align-items: center; }
     .datos-acciones .btn-secundario { justify-content: center; text-align: center; }
-    .foot-inner { grid-template-columns: 1fr; padding: 40px 16px 24px; }
-    .foot-base { padding: 0 16px 24px; }
+    details { text-align: center; }
+    summary { justify-content: center; text-align: center; }
+    .legal-doble { grid-template-columns: 1fr; }
+    tbody tr.lista-dia { padding: 12px; }
+    .fila-dia-titulo { display: block; text-align: center; font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; letter-spacing: -.02em; color: #eeeeee; border-bottom: 1px solid #3d3a39; padding-bottom: 8px; margin-bottom: 4px; }
+    .lista-dia .clase { margin-top: 8px; }
+    .lista-dia .hora-linea { font-family: var(--font-geist-mono); font-size: 12px; text-transform: uppercase; color: #8a8380; }
+    .acciones { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+    .acciones .btn-pequeno { margin: 0; }
+    .tarea .btn-pequeno { margin: 8px 4px 0; }
+    .tarea-cabeza { gap: 8px; }
+    .tarea-cabeza b { min-width: 0; overflow-wrap: anywhere; flex: 1 1 180px; }
+    .estado { flex-shrink: 0; }
+    .foot-inner { grid-template-columns: 1fr; padding: 40px 16px 24px; text-align: center; }
+    .foot-base { padding: 0 16px 24px; justify-content: center; text-align: center; }
   }
 </style>
 </head>
@@ -173,7 +208,7 @@
     <div class="marca">
       <a class="wordmark" href="#contenido"><span class="punto punto-vivo" aria-hidden="true"></span>Agenda·Escolar</a>
       <div>
-        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.6.2</span></h1>
+        <h1>Agenda Escolar <span class="version" id="versionBadge">v1.6.6</span></h1>
         <small>Horario y tareas · 100% local, sin cuentas</small>
       </div>
     </div>
@@ -243,7 +278,6 @@
 
   <section id="tareas" aria-labelledby="tituloTareas">
     <p class="eyebrow">02 — Tareas</p>
-    <p class="eyebrow">02 — Tareas</p>
     <div class="sec-head">
       <div><h2 id="tituloTareas">Tareas</h2><p>El estado se calcula solo con la fecha de entrega</p></div>
       <p class="muted" id="conteoTareas"></p>
@@ -283,7 +317,7 @@
 
   <section id="legal" aria-labelledby="tituloLegal">
     <p class="eyebrow">03 — Privacidad y datos</p>
-    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.6.2 · Uso educativo.</p></div></div>
+    <div class="sec-head"><div><h2 id="tituloLegal">Privacidad, términos y datos</h2><p>Vigencia: 2026-10-06 · Versión v1.6.6 · Uso educativo.</p></div></div>
     <div class="legal-grid">
       <article><h3>1. Responsable y contacto</h3><p>Responsable: el autor del proyecto. Contacto: jhormaza.dev@gmail.com. Jurisdicción: Colombia (Ley 1581 de 2012). Esta app es una página estática publicada en GitHub Pages: no opera cuentas ni servidores propios.</p></article>
       <article><h3>2. Menores de edad</h3><p>Uso con acompañamiento de acudiente o docente. No hay registro, login ni recolección en servidor. No se pide nombre, documento ni ubicación. Si eres acudiente y tienes dudas, escribe a jhormaza.dev@gmail.com.</p></article>
@@ -292,7 +326,7 @@
       <article><h3>5. Seguridad</h3><ul><li>Un solo archivo, sin dependencias ni CDNs; sin conexiones externas (<code>connect-src 'none'</code>).</li><li>Entradas saneadas antes de mostrarse (anti-XSS) y sin <code>onclick</code> inline.</li><li>Si encuentras un fallo, repórtalo a jhormaza.dev@gmail.com antes de difundirlo.</li></ul></article>
       <article><h3>6. Tus derechos</h3><p>Como nada viaja a un servidor, ejerces tus derechos localmente: consulta con Exportar, rectifica editando, suprime con “Borrar todos mis datos” o limpiando el navegador. Reclamos Ley 1581: jhormaza.dev@gmail.com. Cambios de esta política se publican aquí con nueva fecha y versión.</p></article>
     </div>
-    <div class="legal-grid" style="grid-template-columns:1fr 1fr">
+    <div class="legal-grid legal-doble">
       <article><h3>Acceso directo sin internet</h3>
         <details><summary>Android (Chrome)</summary><p class="muted">Abre la página, toca ⋮ > Añadir a pantalla de inicio > Añadir. Se abre a pantalla completa.</p></details>
         <details><summary>iPhone (Safari)</summary><p class="muted">Abre la página, toca Compartir > Añadir a inicio > Añadir.</p></details>
@@ -336,7 +370,7 @@
     </div>
   </div>
   <div class="foot-base">
-    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.6.2</span> · Uso educativo</span>
+    <span>© <span id="anio">2026</span> Agenda Escolar · <span id="versionFoot">v1.6.6</span> · Uso educativo</span>
     <span><a href="#legal">Privacidad</a> · <a href="#legal">Términos</a></span>
   </div>
 </footer>
@@ -348,7 +382,7 @@ if (window.top !== window.self) window.top.location = window.self.location;
 // Claves de almacenamiento y versión
 const CLAVE_HORARIO = "colegio_horario";
 const CLAVE_TAREAS = "colegio_tareas";
-const VERSION = "v1.6.2";
+const VERSION = "v1.6.6";
 // Estado en memoria
 let listaClases = [];
 let listaTareas = [];
@@ -397,18 +431,23 @@ function mostrarError(id, mensaje) {
   el.textContent = mensaje;
   el.classList.toggle("visible", Boolean(mensaje));
 }
+// Arma "1 clase" o "0 clases" según el conteo
+function textoCantidad(cantidad, singular, plural) {
+  return cantidad + " " + (cantidad === 1 ? singular : plural);
+}
 // Actualiza dashboard y fecha visible
 function mostrarResumen() {
   const diaHoy = obtenerDiaHoy();
-  const clasesHoy = listaClases.filter(c => c.dia === diaHoy).length;
+  const validas = (Array.isArray(listaClases) ? listaClases : []).filter(c => c && diasSemana.includes(c.dia));
+  const clasesHoy = validas.filter(c => c.dia === diaHoy).length;
   const pendientes = listaTareas.filter(t => !t.entregada).length;
   document.getElementById("textoClasesHoy").textContent = clasesHoy;
-  document.getElementById("textoDiaHoy").textContent = `Hoy (${diaHoy}) tienes ${clasesHoy} clases`;
+  document.getElementById("textoDiaHoy").textContent = `Hoy (${diaHoy}) tienes ${textoCantidad(clasesHoy, "clase", "clases")}`;
   document.getElementById("textoTareasPendientes").textContent = pendientes;
-  document.getElementById("textoTareasDetalle").textContent = `Tienes ${pendientes} tareas pendientes`;
+  document.getElementById("textoTareasDetalle").textContent = `Tienes ${textoCantidad(pendientes, "tarea pendiente", "tareas pendientes")}`;
   document.getElementById("fechaHoy").textContent = new Date().toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long" });
-  document.getElementById("conteoClases").textContent = `${listaClases.length} clases en total`;
-  document.getElementById("conteoTareas").textContent = `${listaTareas.length} tareas en total`;
+  document.getElementById("conteoClases").textContent = `${textoCantidad(validas.length, "clase", "clases")} en total`;
+  document.getElementById("conteoTareas").textContent = `${textoCantidad(listaTareas.length, "tarea", "tareas")} en total`;
 }
 // Valida que el bloque de horario no choque ni sea inválido
 function validarClase(dia, inicio, fin, ignorarId) {
@@ -416,6 +455,8 @@ function validarClase(dia, inicio, fin, ignorarId) {
   if (fin <= inicio) return "La hora de fin debe ser mayor que la de inicio.";
   const choque = listaClases.some(c => c.dia === dia && c.inicio === inicio && c.fin === fin && c.id !== ignorarId);
   if (choque) return "Ya existe una clase en ese día y horario.";
+  const solape = listaClases.some(c => c.dia === dia && c.id !== ignorarId && inicio < c.fin && c.inicio < fin);
+  if (solape) return "Ese horario se cruza con otra clase del mismo día.";
   return "";
 }
 // Guarda alta o edición de clase
@@ -450,11 +491,58 @@ function crearBoton(texto, claseCss, accion, id) {
   b.dataset.id = id;
   return b;
 }
+// Dice si la pantalla es móvil (lista por día)
+function esMovil() {
+  return Boolean(window.matchMedia && window.matchMedia("(max-width: 600px)").matches);
+}
+// Arma la caja de una clase en lista móvil
+function crearCajaMovil(clase) {
+  const caja = document.createElement("div");
+  caja.className = "clase";
+  const nombre = document.createElement("b");
+  nombre.textContent = clase.materia;
+  const hora = document.createElement("span");
+  hora.className = "hora-linea";
+  hora.textContent = clase.inicio + " - " + clase.fin;
+  const acciones = document.createElement("div");
+  acciones.className = "acciones";
+  acciones.append(crearBoton("Editar", "btn-editar", "editar-clase", clase.id));
+  acciones.append(crearBoton("X", "btn-borrar", "borrar-clase", clase.id));
+  caja.append(nombre, hora, acciones);
+  return caja;
+}
+// Dibuja horario agrupado por día en móvil
+function mostrarHorarioMovil(cuerpo, ordenadas) {
+  if (!ordenadas.length) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.className = "vacio";
+    td.textContent = "Sin clases. Agrega tu primera materia.";
+    tr.appendChild(td); cuerpo.appendChild(tr);
+    return;
+  }
+  diasSemana.forEach(dia => {
+    const delDia = ordenadas.filter(c => c.dia === dia);
+    if (!delDia.length) return;
+    const fila = document.createElement("tr");
+    fila.className = "lista-dia";
+    const celda = document.createElement("td");
+    const titulo = document.createElement("b");
+    titulo.className = "fila-dia-titulo";
+    titulo.textContent = dia;
+    celda.appendChild(titulo);
+    delDia.forEach(clase => celda.appendChild(crearCajaMovil(clase)));
+    fila.appendChild(celda);
+    cuerpo.appendChild(fila);
+  });
+}
 // Dibuja tabla semanal con DOM seguro (sin innerHTML de usuario)
 function mostrarHorario() {
   const cuerpo = document.getElementById("tablaHorario");
   cuerpo.textContent = "";
-  const ordenadas = [...listaClases].sort((a, b) => a.inicio.localeCompare(b.inicio));
+  const validas = (Array.isArray(listaClases) ? listaClases : []).filter(c => c && diasSemana.includes(c.dia));
+  const ordenadas = [...validas].sort((a, b) => a.inicio.localeCompare(b.inicio));
+  if (esMovil()) { mostrarHorarioMovil(cuerpo, ordenadas); return; }
   const horas = [...new Set(ordenadas.map(c => c.inicio + " - " + c.fin))];
   if (!horas.length) {
     const tr = document.createElement("tr");
@@ -763,6 +851,7 @@ function iniciarApp() {
   document.getElementById("btnDescargarApp").addEventListener("click", descargarApp);
   document.getElementById("inputImportar").addEventListener("change", e => { importarDatos(e.target.files[0]); e.target.value = ""; });
   document.getElementById("btnBorrarTodo").addEventListener("click", borrarTodo);
+  window.addEventListener("resize", () => mostrarHorario());
   cargarDatos();
   mostrarTodo();
 }
