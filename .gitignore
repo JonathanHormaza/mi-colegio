@@ -1,0 +1,5 @@
+# Local tooling: nunca se commitea (Constitution §4.2)
+opencode.json
+# Generados y dependencias: los crea el workflow / npm (Constitution §4, RNF-2)
+dist/
+node_modules/
